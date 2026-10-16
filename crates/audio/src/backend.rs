@@ -96,6 +96,7 @@ pub(crate) fn publish_audio_context(
                     .as_ref()
                     .and_then(|prediction| prediction.0.history().newest())
                     .map(|latest| latest.tick.0),
+                replay: view.as_ref().is_some_and(|view| view.in_killcam()),
             }),
     );
     runtime.set_media_service(clips.as_ref().map(|clips| clips.service()));

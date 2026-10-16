@@ -6,7 +6,12 @@ pub struct Iw4Startup {
     pub entries: Vec<String>,
 }
 impl Iw4Startup {
-    pub fn new(resolver: &impl SourceResolver, gametype: &str, map: &str) -> Self {
+    pub fn new(
+        resolver: &impl SourceResolver,
+        gametype: &str,
+        map: &str,
+        overlay: Option<&str>,
+    ) -> Self {
         let gametype = format!("maps/mp/gametypes/{gametype}");
         let map = format!("maps/mp/{map}");
         let callbacks = "maps/mp/gametypes/_callbacksetup";
@@ -25,6 +30,10 @@ impl Iw4Startup {
         if resolver.read_bytes(t6_equipment).is_ok() {
             roots.push(t6_equipment.to_owned());
             entries.push(format!("{t6_equipment}::main"));
+        }
+        if let Some(overlay) = overlay {
+            roots.push(overlay.to_owned());
+            entries.push(format!("{overlay}::main"));
         }
         entries.push(format!("{callbacks}::codecallback_startgametype"));
         Self { roots, entries }

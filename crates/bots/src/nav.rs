@@ -7,11 +7,20 @@ use sim::{ClientId, SimBrush};
 use crate::observation::ModeObjective;
 use crate::query::{HullTrace, QueryResult, QuerySubsystem, SightSample, WalkSample, WorldQuery};
 
-pub const NAV_SCHEMA: u32 = 8;
+pub const NAV_SCHEMA: u32 = 12;
 pub const GRID_IN: f32 = 48.0;
 pub const SNAP_IN: f32 = 256.0;
 pub const STEP_Z_IN: f32 = 18.0;
 const DROP_Z_MAX: f32 = 192.0;
+/// Shooting out a window is worth it only for a real shortcut; players go
+/// round by a door unless the window saves a long way.
+const GLASS_EDGE_COST: f32 = 1200.0;
+/// Routes lean toward walls and cover: a step onto a spot with nothing
+/// within reach on any side costs this share more than one beside cover.
+/// Mild, so a much shorter open route still wins.
+const EXPOSED_COST_SHARE: f32 = 0.3;
+const SHELTER_IN: f32 = 96.0;
+const SHELTER_RAYS: usize = 8;
 /// Stand-hull walk bake: grid, snap, step height. Part of the cache key.
 pub const NAV_HULL: u32 = ((GRID_IN as u32) << 16) ^ ((SNAP_IN as u32) << 8) ^ (STEP_Z_IN as u32);
 pub const EXPAND_CAP: u32 = 2048;
@@ -593,6 +602,25 @@ pub fn bake_seeded(
     }
     let n = nodes.len();
     let buckets = node_buckets(&nodes, step);
+    // How exposed each spot is: 1 with nothing solid within reach around it,
+    // half with one side covered, none beside a wall or a crate on two.
+    let exposure = par_map(n, |i| {
+        let p = nodes[i];
+        let start = [p[0], p[1], p[2] + STEP_Z_IN];
+        let sheltered = (0..SHELTER_RAYS)
+            .filter(|ray| {
+                let a = *ray as f32 * core::f32::consts::TAU / SHELTER_RAYS as f32;
+                let end = [start[0] + a.cos() * SHELTER_IN, start[1] + a.sin() * SHELTER_IN, start[2]];
+                let hit = world.bake_hull(start, end);
+                hit.startsolid || hit.fraction < 1.0
+            })
+            .count();
+        match sheltered {
+            0 => 1.0f32,
+            1 => 0.5,
+            _ => 0.0,
+        }
+    });
     let mut adj = par_map(n, |i| {
         let mut probe = Baker(world);
         let mut edges = Vec::new();
@@ -619,8 +647,9 @@ pub fn bake_seeded(
                 to: j as u16,
                 cost: planar
                     + dz
+                    + planar * EXPOSED_COST_SHARE * exposure[j]
                     + if kind == TraversalKind::BreakGlass {
-                        96.0
+                        GLASS_EDGE_COST
                     } else {
                         0.0
                     },
@@ -698,13 +727,19 @@ fn link_drops(
             if walks[i].iter().any(|e| e.to as usize == j) {
                 continue;
             }
-            let Ok(horiz) = probe.hull_trace([a[0], a[1], a[2] + 2.0], [b[0], b[1], a[2] + 2.0])
-            else {
+            let ledge = ([a[0], a[1], a[2] + 2.0], [b[0], b[1], a[2] + 2.0]);
+            let Ok(horiz) = probe.hull_trace(ledge.0, ledge.1) else {
                 continue;
             };
-            if horiz.startsolid || horiz.fraction < 1.0 {
-                continue;
-            }
+            // A pane across the ledge is shot out on the way, as on a walk.
+            let glass = if horiz.startsolid || horiz.fraction < 1.0 {
+                match probe.navigation_trace(ledge.0, ledge.1) {
+                    Ok(open) if !open.startsolid && open.fraction >= 1.0 => true,
+                    _ => continue,
+                }
+            } else {
+                false
+            };
             let from = [b[0], b[1], a[2] + 2.0];
             let Ok(land) = probe.hull_trace(from, [from[0], from[1], b[2] - 8.0]) else {
                 continue;
@@ -720,7 +755,7 @@ fn link_drops(
             }
             out.push(NavEdge {
                 to: j as u16,
-                cost: planar + dz,
+                cost: planar + dz + if glass { GLASS_EDGE_COST } else { 0.0 },
                 kind: TraversalKind::Drop,
             });
         }
@@ -860,6 +895,63 @@ pub fn firing_supports(
     picked.sort_by(|a, b| a.0.total_cmp(&b.0));
     picked.into_iter().map(|(_, pos)| pos).collect()
 }
+
+/// Baked supports around an objective at `at` for a guard to hold: one per
+/// sector, on the objective's own component, inside the guarding band and on
+/// roughly its floor. Ordered by sector so a caller can share them out.
+/// Distances from a site at which a defender stands: nearest, farthest and
+/// preferred.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct GuardRange {
+    pub near: f32,
+    pub far: f32,
+    pub ideal: f32,
+}
+
+pub const GUARD_DEFAULT: GuardRange = GuardRange {
+    near: GUARD_NEAR,
+    far: GUARD_FAR,
+    ideal: GUARD_RANGE,
+};
+
+pub fn guard_supports(
+    graph: &NavGraph,
+    at: [f32; 3],
+    sectors: usize,
+    range: GuardRange,
+) -> Vec<(usize, [f32; 3])> {
+    let Some(site) = nearest_within(graph, at, SNAP_IN) else {
+        return Vec::new();
+    };
+    let comp = graph.component[site as usize];
+    let range_in = range;
+    let mut best: Vec<Option<(f32, [f32; 3])>> = vec![None; sectors];
+    for (i, pos) in graph.nodes.iter().enumerate() {
+        if graph.component[i] != comp || (pos[2] - at[2]).abs() > GUARD_DZ {
+            continue;
+        }
+        let range = dist_xy(*pos, at);
+        if !(range_in.near..=range_in.far).contains(&range) {
+            continue;
+        }
+        let bearing = (pos[1] - at[1]).atan2(pos[0] - at[0]) + core::f32::consts::PI;
+        let sector =
+            ((bearing / core::f32::consts::TAU * sectors as f32) as usize).min(sectors - 1);
+        let score = (range - range_in.ideal).abs();
+        if best[sector].is_none_or(|(b, _)| score < b) {
+            best[sector] = Some((score, *pos));
+        }
+    }
+    best.into_iter()
+        .enumerate()
+        .filter_map(|(sector, pick)| pick.map(|(_, pos)| (sector, pos)))
+        .collect()
+}
+
+const GUARD_NEAR: f32 = 300.0;
+const GUARD_FAR: f32 = 950.0;
+const GUARD_RANGE: f32 = 600.0;
+const GUARD_DZ: f32 = 160.0;
 
 /// Graph-only query for topology diagnostics; runtime callers use `find_route`
 /// to validate connectors and interaction volumes against collision.
@@ -1582,8 +1674,11 @@ impl SupportProbe {
         while self.done < self.segments {
             let t = (self.done + 1) as f32 / self.segments as f32;
             let p: [f32; 3] = std::array::from_fn(|i| self.a[i] + (self.b[i] - self.a[i]) * t);
+            // Probe from above the higher end: on stairs the straight line
+            // between the ends runs inside the upper steps.
+            let top = self.a[2].max(self.b[2]).max(self.previous_z) + 2.0;
             let ground =
-                world.navigation_trace([p[0], p[1], p[2] + 2.0], [p[0], p[1], p[2] - STEP_Z_IN])?;
+                world.navigation_trace([p[0], p[1], top], [p[0], p[1], p[2] - STEP_Z_IN])?;
             if ground.startsolid
                 || ground.normal[2] < 0.7
                 || ground.fraction >= 1.0

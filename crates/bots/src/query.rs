@@ -217,6 +217,11 @@ pub trait WorldQuery {
     fn weapon_facts(&self, _weapon: u16) -> Option<WeaponFacts> {
         None
     }
+
+    /// A suppressed weapon is only heard close by.
+    fn weapon_silenced(&self, _weapon: u16) -> bool {
+        false
+    }
 }
 
 /// Counts the collision operations a composite check issues without charging
@@ -267,6 +272,10 @@ impl<W: WorldQuery> WorldQuery for Primitives<'_, W> {
 
     fn weapon_facts(&self, weapon: u16) -> Option<WeaponFacts> {
         self.world.weapon_facts(weapon)
+    }
+
+    fn weapon_silenced(&self, weapon: u16) -> bool {
+        self.world.weapon_silenced(weapon)
     }
 }
 
@@ -356,6 +365,10 @@ impl<W: WorldQuery> WorldQuery for Budgeted<'_, W> {
     fn weapon_facts(&self, weapon: u16) -> Option<WeaponFacts> {
         self.world.weapon_facts(weapon)
     }
+
+    fn weapon_silenced(&self, weapon: u16) -> bool {
+        self.world.weapon_silenced(weapon)
+    }
 }
 
 impl WorldQuery for SimWorld {
@@ -409,6 +422,10 @@ impl WorldQuery for SimWorld {
         WeaponClass::from_script_name(self.weapon_script_name(u32::from(weapon)))
     }
 
+    fn weapon_silenced(&self, weapon: u16) -> bool {
+        self.weapon_script_name(u32::from(weapon)).contains("silencer")
+    }
+
     fn weapon_facts(&self, weapon: u16) -> Option<WeaponFacts> {
         let facts = self.weapon_combat_facts(u32::from(weapon))?;
         Some(WeaponFacts {
@@ -422,6 +439,10 @@ impl WorldQuery for SimWorld {
             quick_drop_time_ms: facts.quick_drop_time_ms,
             reload_time_ms: facts.reload_time_ms,
             reload_empty_time_ms: facts.reload_empty_time_ms,
+            semi_auto: facts.fire_type != 0,
+            grenade: crate::observation::Grenade::from_script_name(
+                self.weapon_script_name(u32::from(weapon)),
+            ),
         })
     }
 }

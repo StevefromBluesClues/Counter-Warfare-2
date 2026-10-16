@@ -1,5 +1,7 @@
 mod controller;
+mod grenade;
 mod intent;
+mod look;
 mod memory;
 mod motor;
 mod nav;
@@ -9,6 +11,7 @@ mod query;
 mod roster;
 mod sensor;
 mod task;
+mod threat;
 pub mod unique_loadout;
 mod weapon;
 

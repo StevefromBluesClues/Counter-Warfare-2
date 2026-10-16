@@ -7,7 +7,8 @@ player connect/spawn/damage/killed, the in-game menus, and the sounds they play.
 
 ## Sources and installation
 
-Matches support IW4 modes only (dm, war, dom, sd, sab, ctf, koth, dd).
+Matches support IW4 modes only (dm, war, dom, sd, sab, ctf, koth, dd), plus Bomb
+Defusal (bd), which runs `sd` with a built-in overlay module ([`BOMB-DEFUSAL.md`](BOMB-DEFUSAL.md)).
 T5 and IW5 maps supply entities and map declarations; their gameplay/UI scripts
 are excluded. Menu/HUD layout and match flow stay IW4, with weapon and team icons
 from the corresponding game. Objective models, materials, shaders and effects

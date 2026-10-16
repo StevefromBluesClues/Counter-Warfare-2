@@ -1,0 +1,1557 @@
+#include common_scripts\utility;
+#include maps\mp\_utility;
+#include maps\mp\gametypes\_hud_util;
+
+main()
+{
+	if ( getDvar( "mapname" ) == "mp_background" )
+		return;
+
+	// Two flavours, as in Counter-Strike. Competitive: five a side, first to
+	// 13 of 24 rounds with a halftime, $800 start and $16000 cap, armor and
+	// defuse kits bought, reduced team damage. Casual: bigger teams, first
+	// to 8 of 15 rounds with no halftime, $1000 start and $10000 cap, free
+	// Kevlar + helmet for everyone and a free defuse kit for every CT, no
+	// team damage, a short freeze and a long buy time.
+	level.bd_casual = getDvar( "scr_bd_mode" ) == "casual";
+	if ( level.bd_casual )
+	{
+		startMoney = 1000;
+		maxMoney = 10000;
+		freezeTime = 6;
+		buyTime = 45;
+		halfRounds = 0;
+		winLimit = 8;
+		roundLimit = 15;
+		timeLimit = 2.25;
+	}
+	else
+	{
+		startMoney = 800;
+		maxMoney = 16000;
+		freezeTime = 15;
+		buyTime = 20;
+		halfRounds = 12;
+		winLimit = 13;
+		roundLimit = 24;
+		timeLimit = 1.9167;
+	}
+	level.bd_startMoney = getDvarInt( "scr_bd_startmoney", startMoney );
+	level.bd_maxMoney = getDvarInt( "scr_bd_maxmoney", maxMoney );
+	level.bd_freezeTime = getDvarInt( "scr_bd_freezetime", freezeTime );
+	level.bd_buyTime = getDvarFloat( "scr_bd_buytime", buyTime );
+	level.bd_freeArmor = getDvarInt( "scr_bd_freearmor", int( level.bd_casual ) );
+	level.bd_freeKits = getDvarInt( "scr_bd_freekits", int( level.bd_casual ) );
+	// Counter-Strike's team damage: a third of a bullet, most of a grenade.
+	level.bd_teamDamage = getDvarInt( "scr_bd_teamdamage", int( !level.bd_casual ) );
+	setDvar( "scr_team_fftype", level.bd_teamDamage );
+	level.bd_buyZone = getDvarFloat( "scr_bd_buyzone", 1000 );
+
+	// Round end sets this and the stock restart only initialises it, so the
+	// HUD would stay hidden from the second round on.
+	setDvar( "scr_gameended", 0 );
+	setDvar( "scr_game_hardpoints", 0 );
+	setDvar( "scr_showperksonspawn", 0 );
+	setDvar( "scr_sd_multibomb", 0 );
+	setDvar( "scr_sd_planttime", getDvarFloat( "scr_bd_planttime", 3.2 ) );
+	setDvar( "scr_sd_defusetime", getDvarFloat( "scr_bd_defusetime", 10 ) );
+	setDvar( "scr_sd_bombtimer", getDvarFloat( "scr_bd_bombtimer", 40 ) );
+
+	// Search and Destroy registered its own limits in its main; these replace
+	// them with a twelve-round half and first to thirteen.
+	// Sides never swap: the "good guy" faction (allies) is always CT and
+	// defends. The half is still counted for the money reset.
+	level.bd_halfRounds = getDvarInt( "scr_bd_roundswitch", halfRounds );
+	roundSwitch = 0;
+	game["attackers"] = "axis";
+	game["defenders"] = "allies";
+	winLimit = getDvarInt( "scr_bd_winlimit", winLimit );
+	roundLimit = getDvarInt( "scr_bd_roundlimit", roundLimit );
+	timeLimit = getDvarFloat( "scr_bd_timelimit", timeLimit );
+	setDvar( "scr_sd_roundswitch", roundSwitch );
+	setDvar( "scr_sd_winlimit", winLimit );
+	setDvar( "scr_sd_roundlimit", roundLimit );
+	setDvar( "scr_sd_timelimit", timeLimit );
+	registerRoundSwitchDvar( "sd", roundSwitch, 0, 30 );
+	registerWinLimitDvar( "sd", winLimit, 0, 30 );
+	registerRoundLimitDvar( "sd", roundLimit, 0, 60 );
+	registerTimeLimitDvar( "sd", timeLimit, 0, 1440 );
+
+	level.bd_baseOnPlayerKilled = level.onPlayerKilled;
+	level.onPlayerKilled = ::onBdPlayerKilled;
+	level.bd_basePlayerDamage = level.callbackPlayerDamage;
+	level.callbackPlayerDamage = ::onBdPlayerDamage;
+	level.bd_baseClassChoice = level.class;
+	level.class = ::onBdClassChoice;
+
+	initItems();
+	level.bd_buySound = firstSound( strTok( "scavenger_pack_pickup ammo_crate_use", " " ) );
+	level.bd_tierPerks = strTok( "specialty_bulletaccuracy specialty_fastreload specialty_quickdraw", " " );
+
+	if ( !isDefined( game["bd_loss"] ) )
+	{
+		game["bd_loss"] = [];
+		game["bd_loss"]["allies"] = 1;
+		game["bd_loss"]["axis"] = 1;
+		game["bd_half"] = 0;
+		game["bd_rounds"] = 0;
+	}
+
+	level thread onBdPlayerConnect();
+	level thread bdRoundFlow();
+	level thread bdRoundEnd();
+	level thread bombCarrierIndicator();
+}
+
+// The music and dialog tables are rebuilt by the stock start-of-game setup
+// after this module's main, so they are emptied once players connect.
+muteMusicAndTimeDialog()
+{
+	if ( isDefined( game["music"] ) )
+	{
+		foreach ( key, value in game["music"] )
+		{
+			if ( isString( value ) )
+			{
+				game["music"][key] = "null";
+			}
+			else
+			{
+				silent = [];
+				silent[0] = "null";
+				game["music"][key] = silent;
+			}
+		}
+	}
+	if ( isDefined( game["dialog"] ) )
+	{
+		foreach ( key in strTok( "timesup winning_time losing_time winning_score losing_score", " " ) )
+			game["dialog"][key] = "null";
+	}
+}
+
+updatePlantAccess( carrier )
+{
+	if ( !isDefined( level.bombZones ) )
+		return;
+	foreach ( zone in level.bombZones )
+	{
+		if ( !isDefined( zone.trigger ) )
+			continue;
+		foreach ( player in level.players )
+		{
+			if ( isDefined( carrier ) && player == carrier )
+				zone.trigger enablePlayerUse( player );
+			else
+				zone.trigger disablePlayerUse( player );
+		}
+	}
+}
+
+bombCarrierIndicator()
+{
+	level endon( "game_ended" );
+
+	level waittill( "prematch_over" );
+	if ( !isDefined( level.sdBomb ) )
+		return;
+
+	icon = newTeamHudElem( game["attackers"] );
+	icon setShader( "waypoint_bomb", 8, 8 );
+	icon setWaypoint( true, false );
+	icon.z = 80;
+	icon.alpha = 0;
+	icon.archived = false;
+
+	label = createServerFontString( "default", 1.2, game["attackers"] );
+	label setPoint( "LEFT", "LEFT", 6, 104 );
+	label.color = ( 1, 0.85, 0.3 );
+	label.archived = false;
+	label.hideWhenInMenu = true;
+
+	shown = "";
+	for ( ;; )
+	{
+		carrier = level.sdBomb.carrier;
+		if ( bombFlag( "planted" ) )
+			text = "BOMB: PLANTED";
+		else if ( isDefined( carrier ) )
+			text = "BOMB: " + carrier.name;
+		else
+			text = "BOMB: ON THE GROUND";
+
+		if ( isDefined( carrier ) && !bombFlag( "planted" ) )
+		{
+			icon setTargetEnt( carrier );
+			icon.alpha = 0.85;
+			// The carrier is marked above; S&D's own escort waypoint is not needed.
+			if ( isDefined( level.sdBomb.worldIcons["friendly"] ) )
+				level.sdBomb maps\mp\gametypes\_gameobjects::set3DIcon( "friendly", undefined );
+		}
+		else
+		{
+			icon clearTargetEnt();
+			icon.alpha = 0;
+		}
+
+		if ( text != shown )
+		{
+			label setText( text );
+			shown = text;
+		}
+		updatePlantAccess( carrier );
+		wait 0.25;
+	}
+}
+
+initItems()
+{
+	level.bd_items = [];
+	level.bd_weaponItems = [];
+
+	// Starting pistols: the plain USP .45 for T, the silenced one for CT.
+	addItem( "glock", "USP .45", "usp_mp", 200, "secondary", "t", 300, 0.47, 0.87, "" );
+	addItem( "usp_silencer", "USP .45 Silencer", "usp_silencer_mp", 200, "secondary", "ct", 300, 0.505, 0.95, "" );
+	addItem( "elite", "Akimbo M9", "beretta_akimbo_mp", 300, "secondary", "any", 300, 0.575, 0.98, "" );
+	// The $300 armor-piercing step up from the starter (FMJ rounds).
+	addItem( "p250", "M9", "beretta_fmj_mp", 300, "secondary", "any", 300, 0.64, 0.9, "specialty_bulletaccuracy" );
+	addItem( "tec9", "TMP", "tmp_mp", 500, "secondary", "t", 300, 0.905, 0.98, "" );
+	addItem( "fiveseven", "M93 Raffica", "beretta393_mp", 500, "secondary", "ct", 300, 0.91, 0.95, "" );
+	addItem( "cz75a", "G18", "glock_mp", 500, "secondary", "any", 100, 0.776, 0.98, "" );
+	addItem( "deagle", "Desert Eagle", "deserteagle_mp", 700, "secondary", "any", 300, 0.932, 0.98, "" );
+	addItem( "revolver", ".44 Magnum", "coltanaconda_mp", 600, "secondary", "any", 300, 0.932, 0.98, "" );
+	addItem( "mac10", "Mini-Uzi", "uzi_mp", 1050, "primary", "t", 600, 0.575, 1.13, "specialty_bulletaccuracy" );
+	addItem( "mp9", "Vector", "kriss_mp", 1250, "primary", "ct", 600, 0.6, 1.08, "specialty_bulletaccuracy" );
+	addItem( "mp7", "MP5K", "mp5k_mp", 1500, "primary", "any", 600, 0.625, 1.05, "specialty_bulletaccuracy" );
+	addItem( "mp5sd", "MP5K Silencer", "mp5k_silencer_mp", 1500, "primary", "any", 600, 0.625, 1.05, "specialty_bulletaccuracy" );
+	addItem( "ump45", "UMP45", "ump45_mp", 1200, "primary", "any", 600, 0.65, 1.03, "specialty_bulletaccuracy" );
+	addItem( "p90", "P90", "p90_mp", 2350, "primary", "any", 300, 0.69, 1.23, "specialty_bulletaccuracy" );
+	addItem( "bizon", "PP2000 Ext. Mags", "pp2000_xmags_mp", 1400, "primary", "any", 600, 0.575, 1.44, "specialty_bulletaccuracy" );
+	addItem( "galilar", "TAR-21", "tavor_mp", 1800, "primary", "t", 300, 0.775, 0.91, "specialty_bulletaccuracy" );
+	addItem( "famas", "FAMAS", "famas_mp", 2050, "primary", "ct", 300, 0.7, 1.05, "specialty_bulletaccuracy" );
+	addItem( "ak47", "AK-47", "ak47_fmj_mp", 2700, "primary", "t", 300, 0.775, 1.08, "specialty_fastreload" );
+	addItem( "m4a1", "M4A1", "m4_fmj_mp", 3100, "primary", "ct", 300, 0.7, 1.39, "specialty_fastreload" );
+	addItem( "m4a1_silencer", "M4A1 Silencer", "m4_fmj_silencer_mp", 2900, "primary", "ct", 300, 0.7, 1.38, "specialty_fastreload" );
+	addItem( "sg556", "F2000 ACOG", "fn2000_acog_fmj_mp", 3000, "primary", "t", 300, 1.0, 0.94, "specialty_fastreload" );
+	addItem( "aug", "AUG HBAR ACOG", "aug_acog_fmj_mp", 3300, "primary", "ct", 300, 0.9, 1.09, "specialty_fastreload" );
+	addItem( "ssg08", "M21 EBR", "m21_mp", 1700, "primary", "any", 300, 0.85, 1.0, "specialty_quickdraw" );
+	addItem( "awp", "Intervention", "cheytac_fmj_mp", 4750, "primary", "any", 100, 0.975, 1.0, "specialty_quickdraw" );
+	addItem( "g3sg1", "WA2000", "wa2000_fmj_mp", 5000, "primary", "t", 300, 0.825, 1.05, "specialty_fastreload specialty_quickdraw" );
+	addItem( "scar20", "Barrett .50cal", "barrett_fmj_mp", 5000, "primary", "ct", 300, 0.825, 1.05, "specialty_fastreload specialty_quickdraw" );
+	addItem( "nova", "SPAS-12", "spas12_mp", 1050, "primary", "any", 900, 0.5, 1.05, "specialty_bulletaccuracy" );
+	addItem( "xm1014", "M1014", "m1014_grip_mp", 2000, "primary", "any", 600, 0.8, 1.05, "specialty_bulletaccuracy" );
+	addItem( "sawedoff", "Ranger", "ranger_mp", 1100, "primary", "t", 900, 0.75, 1.05, "specialty_bulletaccuracy" );
+	addItem( "mag7", "Striker", "striker_mp", 1300, "primary", "ct", 900, 0.75, 1.05, "specialty_bulletaccuracy" );
+	addItem( "m249", "MG4", "mg4_fmj_grip_mp", 5200, "primary", "any", 300, 0.8, 1.17, "specialty_fastreload" );
+	addItem( "negev", "RPD", "rpd_grip_mp", 1700, "primary", "any", 300, 0.71, 1.01, "specialty_bulletaccuracy" );
+	addItem( "hegrenade", "Frag Grenade", "frag_grenade_mp", 300, "lethal", "any", 300, 0.5, 1.0, "" );
+	addItem( "flashbang", "Flash Grenade", "flash_grenade_mp", 200, "tactical", "any", 300, 1.0, 1.0, "" );
+	addItem( "smokegrenade", "Smoke Grenade", "smoke_grenade_mp", 300, "tactical", "any", 300, 1.0, 1.0, "" );
+	addItem( "molotov", "Semtex", "semtex_mp", 400, "lethal", "t", 300, 1.0, 1.0, "" );
+	addItem( "incgrenade", "Semtex", "semtex_mp", 500, "lethal", "ct", 300, 1.0, 1.0, "" );
+	addItem( "decoy", "Stun Grenade", "concussion_grenade_mp", 50, "tactical", "any", 300, 1.0, 1.0, "" );
+	addItem( "vest", "Kevlar Vest", "", 650, "armor", "any", 0, 0, 1.0, "" );
+	addItem( "vesthelm", "Kevlar + Helmet", "", 1000, "helmet", "any", 0, 0, 1.0, "" );
+	addItem( "taser", "Throwing Knife", "throwingknife_mp", 200, "lethal", "any", 0, 1.0, 1.0, "" );
+	addItem( "defuser", "Defuse Kit", "", 400, "kit", "ct", 0, 0, 1.0, "" );
+}
+
+firstSound( aliases )
+{
+	foreach ( alias in aliases )
+	{
+		if ( soundExists( alias ) )
+			return alias;
+	}
+	return undefined;
+}
+
+addItem( id, name, weapon, price, slot, side, reward, penetration, damage, perks )
+{
+	item = spawnStruct();
+	item.id = id;
+	item.name = name;
+	item.weapon = weapon;
+	item.price = price;
+	item.slot = slot;
+	item.side = side;
+	item.reward = reward;
+	item.penetration = penetration;
+	item.damage = damage;
+	item.perks = strTok( perks, " " );
+	level.bd_items[id] = item;
+	if ( weapon != "" )
+	{
+		if ( !isDefined( level.bd_weaponItems[weapon] ) )
+			level.bd_weaponItems[weapon] = item;
+		level.bd_weaponItems[weapon + "|" + side] = item;
+	}
+}
+
+itemForWeapon( weapon, isCT )
+{
+	if ( !isDefined( weapon ) )
+		return undefined;
+	side = "t";
+	if ( isDefined( isCT ) && isCT )
+		side = "ct";
+	if ( isDefined( level.bd_weaponItems[weapon + "|" + side] ) )
+		return level.bd_weaponItems[weapon + "|" + side];
+	return level.bd_weaponItems[weapon];
+}
+
+bombFlag( name )
+{
+	switch ( name )
+	{
+		case "planted":
+			return isDefined( level.bombPlanted ) && level.bombPlanted;
+		case "exploded":
+			return isDefined( level.bombExploded ) && level.bombExploded;
+		case "defused":
+			return isDefined( level.bombDefused ) && level.bombDefused;
+	}
+	return false;
+}
+
+syncHalf()
+{
+	if ( !isDefined( game["bd_rounds"] ) || level.bd_halfRounds <= 0 )
+		return;
+	half = int( game["bd_rounds"] / level.bd_halfRounds );
+	if ( half <= game["bd_half"] )
+		return;
+
+	game["bd_half"] = half;
+	game["bd_loss"]["allies"] = 1;
+	game["bd_loss"]["axis"] = 1;
+}
+
+isPlayingTeam( team )
+{
+	return isDefined( team ) && ( team == "allies" || team == "axis" );
+}
+
+onBdPlayerConnect()
+{
+	for ( ;; )
+	{
+		level waittill( "connected", player );
+		player thread onBdPlayerConnected();
+	}
+}
+
+onBdPlayerConnected()
+{
+	self endon( "disconnect" );
+
+	syncHalf();
+	if ( !isDefined( self.pers["bd_money"] ) || !isDefined( self.pers["bd_half"] ) || self.pers["bd_half"] != game["bd_half"] )
+	{
+		self.pers["bd_money"] = level.bd_startMoney;
+		self.pers["bd_half"] = game["bd_half"];
+		self.pers["bd_hasGear"] = false;
+	}
+
+	muteMusicAndTimeDialog();
+
+	self.bd_ready = false;
+	self.bd_armor = 0;
+	self.bd_helmet = false;
+	self.bd_kit = false;
+	self.bd_isCT = false;
+
+	self setClientDvar( "ui_bd_ct_faction", factionName( game["allies"], true ) );
+	self setClientDvar( "ui_bd_t_faction", factionName( game["axis"], false ) );
+	if ( isDefined( game["icons"] ) && isDefined( game["icons"]["allies"] ) )
+		self setClientDvar( "ui_bd_ct_icon", game["icons"]["allies"] );
+	if ( isDefined( game["icons"] ) && isDefined( game["icons"]["axis"] ) )
+		self setClientDvar( "ui_bd_t_icon", game["icons"]["axis"] );
+	self createMoneyHud();
+	self notifyOnPlayerCommand( "bd_buy_key", "+actionslot 2" );
+
+	self thread watchBuyKey();
+	self thread watchBuyResponses();
+	self thread watchBdSpawns();
+	self thread watchBombPlant();
+	self thread showSpectatedName();
+	self thread watchBombDefuse();
+}
+
+factionName( faction, good )
+{
+	if ( !isDefined( faction ) )
+		faction = "";
+	if ( isSubStr( faction, "seal" ) )
+		return "NAVY SEALS";
+	if ( isSubStr( faction, "141" ) )
+		return "TASK FORCE 141";
+	if ( isSubStr( faction, "army" ) || isSubStr( faction, "ranger" ) )
+		return "U.S. ARMY RANGERS";
+	if ( isSubStr( faction, "russia" ) || isSubStr( faction, "spetsnaz" ) )
+		return "SPETSNAZ";
+	if ( isSubStr( faction, "militia" ) )
+		return "MILITIA";
+	if ( isSubStr( faction, "airborne" ) )
+		return "AIRBORNE";
+	if ( good )
+		return "U.S. ARMY RANGERS";
+	return "OPFOR";
+}
+
+// Counter-Strike's team pick: CT is always the allied (good guy) faction, T
+// the opposing one. A change of team waits out the round as a spectator.
+bdChooseTeam( team )
+{
+	self endon( "disconnect" );
+
+	if ( team == "auto" )
+	{
+		allies = 0;
+		axis = 0;
+		foreach ( player in level.players )
+		{
+			if ( player == self || !isDefined( player.pers["team"] ) )
+				continue;
+			if ( player.pers["team"] == "allies" )
+				allies++;
+			else if ( player.pers["team"] == "axis" )
+				axis++;
+		}
+		team = "allies";
+		if ( axis < allies )
+			team = "axis";
+	}
+
+	self closepopupMenu();
+	if ( !isDefined( self.pers["team"] ) || self.pers["team"] != team )
+	{
+		// The stock join check caps a side at half the server; with every
+		// slot filled (Casual) both sides sit at the cap, so neither the bot
+		// making room nor the player could move first. The swap keeps the
+		// sides even itself, so the cap is lifted while it happens.
+		limit = level.teamLimit;
+		level.teamLimit = 64;
+		self makeRoomOn( team );
+		if ( team == "allies" )
+			self [[ level.allies ]]();
+		else
+			self [[ level.axis ]]();
+		level.teamLimit = limit;
+		// The class menu the switch opens is not used in this mode.
+		self closepopupMenu();
+	}
+	if ( self.sessionstate != "playing" )
+	{
+		self [[ level.class ]]( "class0" );
+		// Waiting out the round: spectate the new team instead of staying
+		// frozen where the switch left the camera.
+		if ( self.sessionstate != "playing" )
+		{
+			self maps\mp\gametypes\_playerlogic::spawnSpectator();
+			self maps\mp\gametypes\_spectating::setSpectatePermissions();
+		}
+	}
+}
+
+// A player picking a side already a player ahead gets it, as in
+// Counter-Strike: a bot on that side moves to the other one first (the stock
+// team balance would otherwise refuse the pick).
+makeRoomOn( team )
+{
+	other = getOtherTeam( team );
+	mine = 0;
+	theirs = 0;
+	bot = undefined;
+	foreach ( player in level.players )
+	{
+		if ( player == self || !isDefined( player.pers["team"] ) )
+			continue;
+		if ( player.pers["team"] == team )
+		{
+			mine++;
+			if ( isDefined( player.pers["bd_bot"] ) && player.pers["bd_bot"] && ( !isDefined( bot ) || !isReallyAlive( player ) ) )
+				bot = player;
+		}
+		else if ( player.pers["team"] == other )
+		{
+			theirs++;
+		}
+	}
+	if ( mine < theirs + 1 || !isDefined( bot ) )
+		return;
+	if ( other == "allies" )
+		bot [[ level.allies ]]();
+	else
+		bot [[ level.axis ]]();
+	bot closepopupMenu();
+}
+
+createMoneyHud()
+{
+	hud = self createFontString( "objective", 1.6 );
+	hud setPoint( "LEFT", "LEFT", 6, 60 );
+	hud.label = "$";
+	hud.color = ( 0.55, 1, 0.45 );
+	hud.hideWhenInMenu = false;
+	hud.archived = false;
+	hud setValue( self.pers["bd_money"] );
+	self.bd_moneyHud = hud;
+	self setClientDvar( "ui_bd_money", self.pers["bd_money"] );
+}
+
+updateMoneyHud()
+{
+	if ( isDefined( self.bd_moneyHud ) )
+		self.bd_moneyHud setValue( self.pers["bd_money"] );
+	self setClientDvar( "ui_bd_money", self.pers["bd_money"] );
+}
+
+giveMoney( amount, reason )
+{
+	money = self.pers["bd_money"] + amount;
+	if ( money > level.bd_maxMoney )
+		money = level.bd_maxMoney;
+	if ( money < 0 )
+		money = 0;
+	self.pers["bd_money"] = money;
+	self updateMoneyHud();
+
+	if ( !isDefined( reason ) )
+		return;
+	if ( amount >= 0 )
+		self iPrintLn( "+$" + amount + ": " + reason );
+	else
+		self iPrintLn( "-$" + ( 0 - amount ) + ": " + reason );
+}
+
+watchBdSpawns()
+{
+	self endon( "disconnect" );
+
+	for ( ;; )
+	{
+		self waittill( "spawned_player" );
+		self onBdSpawned();
+	}
+}
+
+onBdSpawned()
+{
+	self.bd_ready = false;
+	self.bd_spawnOrigin = self.origin;
+	self.bd_isCT = ( self.pers["team"] == game["defenders"] );
+	self.bd_lethal = undefined;
+	self.bd_tactical = undefined;
+	self.pers["cur_death_streak"] = 0;
+
+	self _clearPerks();
+	self takeAllWeapons();
+
+	if ( isDefined( self.pers["bd_hasGear"] ) && self.pers["bd_hasGear"] )
+	{
+		self restoreGear();
+	}
+	else
+	{
+		self.bd_armor = 0;
+		self.bd_helmet = false;
+		self.bd_kit = false;
+	}
+	self.pers["bd_hasGear"] = false;
+	if ( level.bd_freeArmor )
+	{
+		self.bd_armor = 100;
+		self.bd_helmet = true;
+	}
+	if ( level.bd_freeKits && self.bd_isCT )
+		self.bd_kit = true;
+
+	if ( !isDefined( self slotWeapon( "primary" ) ) && !isDefined( self slotWeapon( "secondary" ) ) )
+	{
+		if ( self.bd_isCT )
+			self giveBdWeapon( level.bd_items["usp_silencer"].weapon );
+		else
+			self giveBdWeapon( level.bd_items["glock"].weapon );
+	}
+
+	spawnWeapon = self slotWeapon( "primary" );
+	if ( !isDefined( spawnWeapon ) )
+		spawnWeapon = self slotWeapon( "secondary" );
+	if ( isDefined( spawnWeapon ) )
+	{
+		self setSpawnWeapon( spawnWeapon );
+		self switchToWeapon( spawnWeapon );
+	}
+
+	self applyKit();
+	self maps\mp\gametypes\_weapons::updateMoveSpeedScale( "primary" );
+	self setClientDvar( "ui_bd_ct", int( self.bd_isCT ) );
+	self updateMoneyHud();
+
+	if ( isDefined( level.bd_freezing ) && level.bd_freezing )
+		self freezeControlsWrapper( true );
+
+	self.bd_ready = true;
+	if ( isDefined( self.bd_pendingAutobuy ) && self.bd_pendingAutobuy )
+	{
+		self.bd_pendingAutobuy = false;
+		self autoBuy();
+	}
+	if ( isDefined( self.bd_pendingBotbuy ) && self.bd_pendingBotbuy )
+	{
+		self.bd_pendingBotbuy = false;
+		self botBuy();
+	}
+
+	self thread showBuyHint();
+	self thread watchHeldWeaponBonus();
+}
+
+watchHeldWeaponBonus()
+{
+	self endon( "disconnect" );
+	self endon( "death" );
+
+	self applyHeldWeaponBonus( self getCurrentWeapon() );
+	for ( ;; )
+	{
+		self waittill( "weapon_change", weapon );
+		self applyHeldWeaponBonus( weapon );
+	}
+}
+
+applyHeldWeaponBonus( weapon )
+{
+	wanted = [];
+	item = itemForWeapon( weapon, self.bd_isCT );
+	if ( isDefined( item ) && isDefined( item.perks ) )
+	{
+		foreach ( perk in item.perks )
+			wanted[perk] = true;
+	}
+	foreach ( perk in level.bd_tierPerks )
+	{
+		if ( isDefined( wanted[perk] ) )
+		{
+			self setPerk( perk );
+			self.perks[perk] = true;
+		}
+		else if ( isDefined( self.perks[perk] ) )
+		{
+			self unsetPerk( perk );
+			self.perks[perk] = undefined;
+		}
+	}
+}
+
+restoreGear()
+{
+	self.bd_armor = self.pers["bd_armor"];
+	self.bd_helmet = self.pers["bd_helmet"];
+	self.bd_kit = self.pers["bd_kit"];
+
+	if ( self.pers["bd_secondary"] != "" )
+		self giveBdWeapon( self.pers["bd_secondary"] );
+	if ( self.pers["bd_primary"] != "" )
+		self giveBdWeapon( self.pers["bd_primary"] );
+	if ( self.pers["bd_lethal"] != "" )
+		self giveLethal( self.pers["bd_lethal"], self.pers["bd_lethalCount"] );
+	if ( self.pers["bd_tactical"] != "" )
+		self giveTactical( self.pers["bd_tactical"], self.pers["bd_tacticalCount"] );
+}
+
+saveGear()
+{
+	foreach ( player in level.players )
+	{
+		player.pers["bd_hasGear"] = false;
+		if ( !isReallyAlive( player ) || !isPlayingTeam( player.pers["team"] ) )
+			continue;
+
+		primary = player slotWeapon( "primary" );
+		secondary = player slotWeapon( "secondary" );
+
+		player.pers["bd_primary"] = "";
+		if ( isDefined( primary ) )
+			player.pers["bd_primary"] = primary;
+		player.pers["bd_secondary"] = "";
+		if ( isDefined( secondary ) )
+			player.pers["bd_secondary"] = secondary;
+
+		player.pers["bd_lethal"] = "";
+		if ( isDefined( player.bd_lethal ) && player hasWeapon( player.bd_lethal ) && player getWeaponAmmoClip( player.bd_lethal ) > 0 )
+		{
+			player.pers["bd_lethal"] = player.bd_lethal;
+			player.pers["bd_lethalCount"] = player getWeaponAmmoClip( player.bd_lethal );
+		}
+		player.pers["bd_tactical"] = "";
+		if ( isDefined( player.bd_tactical ) && player hasWeapon( player.bd_tactical ) && player getWeaponAmmoClip( player.bd_tactical ) > 0 )
+		{
+			player.pers["bd_tactical"] = player.bd_tactical;
+			player.pers["bd_tacticalCount"] = player getWeaponAmmoClip( player.bd_tactical );
+		}
+
+		player.pers["bd_armor"] = player.bd_armor;
+		player.pers["bd_helmet"] = player.bd_helmet;
+		player.pers["bd_kit"] = player.bd_kit;
+		player.pers["bd_hasGear"] = true;
+	}
+}
+
+weaponSlot( weapon )
+{
+	if ( isDefined( level.bd_weaponItems[weapon] ) )
+		return level.bd_weaponItems[weapon].slot;
+	if ( weaponClass( weapon ) == "pistol" )
+		return "secondary";
+	return "primary";
+}
+
+slotWeapon( slot )
+{
+	foreach ( weapon in self getWeaponsListPrimaries() )
+	{
+		if ( isSubStr( weapon, "briefcase" ) )
+			continue;
+		if ( weaponSlot( weapon ) == slot )
+			return weapon;
+	}
+	return undefined;
+}
+
+giveBdWeapon( weapon )
+{
+	self _giveWeapon( weapon );
+	if ( weaponSlot( weapon ) == "secondary" )
+		self setWeaponAmmoStock( weapon, self getWeaponAmmoStock( weapon ) * 3 );
+}
+
+giveLethal( weapon, count )
+{
+	if ( isDefined( self.bd_lethal ) && self.bd_lethal != weapon && self hasWeapon( self.bd_lethal ) )
+		self takeWeapon( self.bd_lethal );
+
+	if ( weapon == "frag_grenade_mp" )
+		self setOffhandPrimaryClass( "frag" );
+	else if ( weapon == "throwingknife_mp" )
+		self setOffhandPrimaryClass( "throwingknife" );
+	else
+		self setOffhandPrimaryClass( "other" );
+
+	self giveWeapon( weapon );
+	self setWeaponAmmoClip( weapon, count );
+	self.bd_lethal = weapon;
+}
+
+giveTactical( weapon, count )
+{
+	if ( isDefined( self.bd_tactical ) && self.bd_tactical != weapon && self hasWeapon( self.bd_tactical ) )
+		self takeWeapon( self.bd_tactical );
+
+	if ( weapon == "flash_grenade_mp" )
+		self setOffhandSecondaryClass( "flash" );
+	else
+		self setOffhandSecondaryClass( "smoke" );
+
+	self giveWeapon( weapon );
+	self setWeaponAmmoClip( weapon, count );
+	self.bd_tactical = weapon;
+}
+
+offhandCount( weapon )
+{
+	if ( !isDefined( weapon ) || !self hasWeapon( weapon ) )
+		return 0;
+	return self getWeaponAmmoClip( weapon );
+}
+
+applyKit()
+{
+	if ( self.bd_isCT && self.bd_kit )
+		self.objectiveScaler = 2;
+	else
+		self.objectiveScaler = 1;
+}
+
+buyWindowClosed()
+{
+	return isDefined( level.bd_buyEnd ) && getTime() > level.bd_buyEnd;
+}
+
+buyWindowBlocker()
+{
+	if ( !isReallyAlive( self ) || !isPlayingTeam( self.pers["team"] ) || !self.bd_ready )
+		return "You can't buy right now";
+	if ( isDefined( level.gameEnded ) && level.gameEnded )
+		return "The round is over";
+	if ( buyWindowClosed() )
+		return "The " + int( level.bd_buyTime ) + " second buy period has expired";
+	if ( level.bd_buyZone > 0 && isDefined( self.bd_spawnOrigin ) && distance( self.origin, self.bd_spawnOrigin ) > level.bd_buyZone )
+		return "You are not in a buy zone";
+	return undefined;
+}
+
+buyBlocker( item )
+{
+	reason = self buyWindowBlocker();
+	if ( isDefined( reason ) )
+		return reason;
+
+	if ( item.side == "t" && self.bd_isCT )
+		return "Only Terrorists can buy the " + item.name;
+	if ( item.side == "ct" && !self.bd_isCT )
+		return "Only Counter-Terrorists can buy the " + item.name;
+
+	switch ( item.slot )
+	{
+		case "primary":
+		case "secondary":
+			if ( self hasWeapon( item.weapon ) )
+				return "You already have the " + item.name;
+			break;
+		case "lethal":
+			if ( isDefined( self.bd_lethal ) && self.bd_lethal == item.weapon && self offhandCount( item.weapon ) >= 1 )
+				return "You cannot carry any more";
+			break;
+		case "tactical":
+			limit = 1;
+			if ( item.weapon == "flash_grenade_mp" )
+				limit = 2;
+			if ( isDefined( self.bd_tactical ) && self.bd_tactical == item.weapon && self offhandCount( item.weapon ) >= limit )
+				return "You cannot carry any more";
+			break;
+		case "armor":
+			if ( self.bd_armor >= 100 )
+				return "You already have Kevlar";
+			break;
+		case "helmet":
+			if ( self.bd_armor >= 100 && self.bd_helmet )
+				return "You already have Kevlar and a helmet";
+			break;
+		case "kit":
+			if ( self.bd_kit )
+				return "You already have a defuse kit";
+			break;
+	}
+	return undefined;
+}
+
+itemPrice( item )
+{
+	if ( item.slot == "helmet" )
+	{
+		if ( self.bd_armor >= 100 )
+			return 350;
+		if ( self.bd_helmet )
+			return 650;
+	}
+	return item.price;
+}
+
+tryBuy( id, quiet )
+{
+	item = level.bd_items[id];
+	if ( !isDefined( item ) )
+		return false;
+
+	reason = self buyBlocker( item );
+	if ( !isDefined( reason ) && self.pers["bd_money"] < self itemPrice( item ) )
+		reason = "Insufficient funds";
+	if ( isDefined( reason ) )
+	{
+		if ( !isDefined( quiet ) || !quiet )
+			self iPrintLnBold( reason );
+		return false;
+	}
+
+	self giveMoney( 0 - self itemPrice( item ) );
+	self grantItem( item );
+	if ( ( !isDefined( quiet ) || !quiet ) && isDefined( level.bd_buySound ) )
+		self playLocalSound( level.bd_buySound );
+	return true;
+}
+
+grantItem( item )
+{
+	switch ( item.slot )
+	{
+		case "primary":
+		case "secondary":
+			old = self slotWeapon( item.slot );
+			if ( isDefined( old ) )
+			{
+				self dropItem( old );
+				if ( self hasWeapon( old ) )
+					self takeWeapon( old );
+			}
+			self giveBdWeapon( item.weapon );
+			self switchToWeapon( item.weapon );
+			self applyHeldWeaponBonus( item.weapon );
+			self maps\mp\gametypes\_weapons::updateMoveSpeedScale( "primary" );
+			break;
+		case "lethal":
+			self giveLethal( item.weapon, 1 );
+			break;
+		case "tactical":
+			count = 1;
+			if ( isDefined( self.bd_tactical ) && self.bd_tactical == item.weapon )
+				count = self offhandCount( item.weapon ) + 1;
+			self giveTactical( item.weapon, count );
+			break;
+		case "armor":
+			self.bd_armor = 100;
+			break;
+		case "helmet":
+			self.bd_armor = 100;
+			self.bd_helmet = true;
+			break;
+		case "kit":
+			self.bd_kit = true;
+			self applyKit();
+			break;
+	}
+}
+
+autoBuy()
+{
+	if ( !self.bd_ready )
+	{
+		self.bd_pendingAutobuy = true;
+		return;
+	}
+	if ( isDefined( self buyWindowBlocker() ) )
+		return;
+
+	self autoBuyPrimary();
+	self autoBuyGear( true );
+}
+
+autoBuyPrimary()
+{
+	if ( self.bd_isCT )
+	{
+		rifle = "m4a1";
+		cheapRifle = "famas";
+		smg = "mp9";
+	}
+	else
+	{
+		rifle = "ak47";
+		cheapRifle = "galilar";
+		smg = "mac10";
+	}
+
+	if ( !isDefined( self slotWeapon( "primary" ) ) )
+	{
+		money = self.pers["bd_money"];
+		riflePrice = level.bd_items[rifle].price;
+		if ( money >= riflePrice + 1000 )
+		{
+			self tryBuy( "vesthelm", true );
+			self tryBuy( rifle, true );
+		}
+		else if ( money >= riflePrice + 650 )
+		{
+			self tryBuy( "vest", true );
+			self tryBuy( rifle, true );
+		}
+		else if ( money >= riflePrice )
+		{
+			self tryBuy( rifle, true );
+		}
+		else if ( money >= level.bd_items[cheapRifle].price + 650 )
+		{
+			self tryBuy( "vest", true );
+			self tryBuy( cheapRifle, true );
+		}
+		else if ( money >= level.bd_items[smg].price + 650 )
+		{
+			self tryBuy( "vest", true );
+			self tryBuy( smg, true );
+		}
+		else
+		{
+			self tryBuy( "vest", true );
+		}
+	}
+	else
+	{
+		self tryBuy( "vesthelm", true );
+	}
+}
+
+autoBuyGear( tacticals )
+{
+	if ( self.bd_isCT )
+		self tryBuy( "defuser", true );
+	self tryBuy( "hegrenade", true );
+	if ( tacticals )
+	{
+		self tryBuy( "flashbang", true );
+		self tryBuy( "smokegrenade", true );
+	}
+}
+
+// Bots keep one favourite kind of gun for the match, as players do: most take
+// rifles, some snipe, some rush with shotguns and SMGs, a few carry an LMG.
+botBuy()
+{
+	if ( !self.bd_ready )
+	{
+		self.bd_pendingBotbuy = true;
+		return;
+	}
+	if ( isDefined( self buyWindowBlocker() ) )
+		return;
+	if ( !isDefined( self.pers["bd_botStyle"] ) )
+		self.pers["bd_botStyle"] = randomInt( 100 );
+	style = self.pers["bd_botStyle"];
+
+	// Counter-Strike money: a bot that cannot afford a full buy saves this
+	// round when the loss bonus would get it one next round, and spends what
+	// it has when saving would not help.
+	if ( !isDefined( self slotWeapon( "primary" ) ) && self botBuyMode() == "eco" )
+		return;
+
+	if ( !isDefined( self slotWeapon( "primary" ) ) )
+	{
+		picks = [];
+		if ( style < 15 )
+		{
+			picks[picks.size] = "awp";
+			picks[picks.size] = "ssg08";
+		}
+		else if ( style < 25 )
+		{
+			picks[picks.size] = "xm1014";
+			picks[picks.size] = "nova";
+		}
+		else if ( style < 35 )
+		{
+			picks[picks.size] = "p90";
+			picks[picks.size] = "mp7";
+		}
+		else if ( style < 42 )
+		{
+			if ( self.bd_isCT )
+				picks[picks.size] = "aug";
+			else
+				picks[picks.size] = "m249";
+			picks[picks.size] = "negev";
+		}
+		for ( i = 0; i < picks.size; i++ )
+		{
+			price = level.bd_items[picks[i]].price;
+			if ( self.pers["bd_money"] >= price + 650 )
+			{
+				self tryBuy( "vest", true );
+				self tryBuy( picks[i], true );
+				break;
+			}
+		}
+	}
+	// A favourite out of reach falls back to the usual rifle or SMG buy.
+	self autoBuyPrimary();
+	self autoBuyGear( false );
+
+	tacticals = strTok( "smokegrenade smokegrenade decoy decoy flashbang", " " );
+	self tryBuy( tacticals[( style + self.pers["bd_money"] ) % tacticals.size], true );
+}
+
+// "pistol" on the opening round of a half, "full" when a rifle, a vest and
+// (for a CT) a kit are affordable, "eco" when saving now buys all that next
+// round even after a loss or when not even a cheap rifle and vest are in
+// reach, else "force".
+botBuyMode()
+{
+	rounds = game["bd_rounds"];
+	half = level.bd_halfRounds;
+	if ( rounds == 0 || ( half > 0 && rounds == half ) )
+		return "pistol";
+
+	money = self.pers["bd_money"];
+	if ( self.bd_isCT )
+	{
+		fullCost = level.bd_items["m4a1"].price + 650 + level.bd_items["defuser"].price;
+		forceCost = level.bd_items["famas"].price + 650;
+	}
+	else
+	{
+		fullCost = level.bd_items["ak47"].price + 650;
+		forceCost = level.bd_items["galilar"].price + 650;
+	}
+	if ( money >= fullCost )
+		return "full";
+
+	// Nothing to save for on the last round of a half or at match point.
+	if ( half > 0 && ( rounds + 1 ) % half == 0 )
+		return "force";
+	winLimit = getDvarInt( "scr_sd_winlimit" );
+	if ( winLimit > 0 && isDefined( game["roundsWon"] ) )
+	{
+		foreach ( team in strTok( "allies axis", " " ) )
+		{
+			if ( isDefined( game["roundsWon"][team] ) && game["roundsWon"][team] >= winLimit - 1 )
+				return "force";
+		}
+	}
+
+	lossLevel = game["bd_loss"][self.pers["team"]] + 1;
+	if ( lossLevel > 5 )
+		lossLevel = 5;
+	if ( money + 1400 + 500 * ( lossLevel - 1 ) >= fullCost )
+		return "eco";
+	// Too little even for a cheap rifle and a vest: keep saving.
+	if ( money < forceCost )
+		return "eco";
+	return "force";
+}
+
+watchBuyKey()
+{
+	self endon( "disconnect" );
+
+	for ( ;; )
+	{
+		self waittill( "bd_buy_key" );
+		reason = self buyWindowBlocker();
+		if ( isDefined( reason ) )
+			self iPrintLnBold( reason );
+		else
+			self openPopupMenu( "bd_buy" );
+	}
+}
+
+watchBuyResponses()
+{
+	self endon( "disconnect" );
+
+	for ( ;; )
+	{
+		self waittill( "menuresponse", menu, response );
+		if ( response.size < 4 || getSubStr( response, 0, 3 ) != "bd:" )
+			continue;
+
+		id = getSubStr( response, 3, response.size );
+		if ( id == "autobuy" )
+			self autoBuy();
+		else if ( id == "team_ct" )
+			self bdChooseTeam( "allies" );
+		else if ( id == "team_t" )
+			self bdChooseTeam( "axis" );
+		else if ( id == "team_auto" )
+			self bdChooseTeam( "auto" );
+		else if ( id == "botbuy" )
+		{
+			// Only host bots send this: it marks them as the ones to move
+			// when a player's team pick needs room.
+			self.pers["bd_bot"] = true;
+			self botBuy();
+		}
+		else
+			self tryBuy( id );
+	}
+}
+
+showBuyHint()
+{
+	self endon( "disconnect" );
+
+	hint = self createFontString( "default", 1.2 );
+	hint setPoint( "LEFT", "LEFT", 6, 82 );
+	hint setText( "Press B to open the buy menu" );
+	hint.hideWhenInMenu = true;
+	hint.archived = false;
+
+	while ( isReallyAlive( self ) && !buyWindowClosed() && !( isDefined( level.gameEnded ) && level.gameEnded ) )
+		wait 0.25;
+
+	hint destroyElem();
+}
+
+showSpectatedName()
+{
+	self endon( "disconnect" );
+
+	hud = self createFontString( "default", 1.4 );
+	hud setPoint( "BOTTOM", "BOTTOM", 0, -110 );
+	hud.archived = false;
+	hud.alpha = 0;
+	shown = "";
+	for ( ;; )
+	{
+		name = "";
+		if ( self.sessionstate == "spectator" )
+		{
+			target = self getSpectatingPlayer();
+			if ( isDefined( target ) && isDefined( target.name ) )
+				name = target.name;
+		}
+		if ( name != shown )
+		{
+			shown = name;
+			if ( name == "" )
+			{
+				hud.alpha = 0;
+			}
+			else
+			{
+				hud setText( "Spectating: " + name );
+				hud.alpha = 1;
+			}
+		}
+		wait 0.2;
+	}
+}
+
+watchBombPlant()
+{
+	self endon( "disconnect" );
+
+	for ( ;; )
+	{
+		self waittill( "bomb_planted" );
+		self giveMoney( 300, "Award for planting the bomb" );
+	}
+}
+
+watchBombDefuse()
+{
+	self endon( "disconnect" );
+
+	for ( ;; )
+	{
+		self waittill( "bomb_defused" );
+		self giveMoney( 300, "Award for defusing the bomb" );
+		// The round ends on the spot and freezes everyone before the stock
+		// script can put the kit away, which left the defuse animation
+		// playing: hand the gun back now.
+		self putAwayUseWeapon();
+	}
+}
+
+putAwayUseWeapon()
+{
+	foreach ( useWeapon in strTok( "briefcase_bomb_defuse_mp briefcase_bomb_mp", " " ) )
+	{
+		if ( self hasWeapon( useWeapon ) && self getCurrentWeapon() == useWeapon )
+		{
+			self takeWeapon( useWeapon );
+			gun = self slotWeapon( "primary" );
+			if ( !isDefined( gun ) )
+				gun = self slotWeapon( "secondary" );
+			if ( isDefined( gun ) )
+				self switchToWeapon( gun );
+		}
+	}
+}
+
+killReward( weapon, meansOfDeath, isCT )
+{
+	if ( meansOfDeath == "MOD_MELEE" )
+		return 1500;
+	item = itemForWeapon( weapon, isCT );
+	if ( isDefined( item ) )
+		return item.reward;
+	if ( isExplosiveDeath( meansOfDeath ) )
+		return 0;
+	return 300;
+}
+
+killWeaponName( weapon, meansOfDeath, isCT )
+{
+	if ( meansOfDeath == "MOD_MELEE" )
+		return "Knife";
+	item = itemForWeapon( weapon, isCT );
+	if ( isDefined( item ) )
+		return item.name;
+	return "weapon";
+}
+
+isBulletDamage( meansOfDeath )
+{
+	return meansOfDeath == "MOD_RIFLE_BULLET" || meansOfDeath == "MOD_PISTOL_BULLET" || meansOfDeath == "MOD_HEAD_SHOT";
+}
+
+isExplosiveDeath( meansOfDeath )
+{
+	switch ( meansOfDeath )
+	{
+		case "MOD_EXPLOSIVE":
+		case "MOD_GRENADE":
+		case "MOD_GRENADE_SPLASH":
+		case "MOD_PROJECTILE":
+		case "MOD_PROJECTILE_SPLASH":
+			return true;
+	}
+	return false;
+}
+
+onBdPlayerKilled( eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, psOffsetTime, deathAnimDuration, lifeId )
+{
+	self [[ level.bd_baseOnPlayerKilled ]]( eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, psOffsetTime, deathAnimDuration, lifeId );
+	self.bd_ready = false;
+
+	if ( !isDefined( attacker ) || !isPlayer( attacker ) || attacker == self || !isDefined( attacker.pers["bd_money"] ) )
+		return;
+
+	if ( attacker.pers["team"] == self.pers["team"] )
+	{
+		attacker giveMoney( -300, "Penalty for killing a teammate" );
+		return;
+	}
+
+	attackerIsCT = attacker.pers["team"] == game["defenders"];
+	attacker giveMoney( killReward( sWeapon, sMeansOfDeath, attackerIsCT ), "Award for neutralizing an enemy with the " + killWeaponName( sWeapon, sMeansOfDeath, attackerIsCT ) );
+}
+
+// Loadouts come from the buy menu, so a class picked mid-round only takes
+// effect as a choice; it never reissues the class weapons over bought gear.
+onBdClassChoice( response )
+{
+	if ( self.sessionstate != "playing" )
+	{
+		self [[ level.bd_baseClassChoice ]]( response );
+		return;
+	}
+
+	hadDoneCombat = self.hasDoneCombat;
+	self.hasDoneCombat = true;
+	self [[ level.bd_baseClassChoice ]]( response );
+	self.hasDoneCombat = hadDoneCombat;
+}
+
+armorPenetration( weapon, meansOfDeath )
+{
+	if ( meansOfDeath == "MOD_MELEE" )
+		return 0.85;
+	if ( isDefined( weapon ) && isDefined( level.bd_weaponItems[weapon] ) )
+		return level.bd_weaponItems[weapon].penetration;
+	if ( isExplosiveDeath( meansOfDeath ) )
+		return 0.5;
+	return 0.75;
+}
+
+armorCovers( hitLoc, meansOfDeath )
+{
+	switch ( meansOfDeath )
+	{
+		case "MOD_FALLING":
+		case "MOD_TRIGGER_HURT":
+		case "MOD_SUICIDE":
+		case "MOD_CRUSH":
+			return false;
+	}
+	if ( !isDefined( hitLoc ) )
+		return true;
+	if ( hitLoc == "head" || hitLoc == "helmet" || hitLoc == "neck" )
+		return self.bd_helmet;
+	if ( isSubStr( hitLoc, "leg" ) || isSubStr( hitLoc, "foot" ) )
+		return false;
+	return true;
+}
+
+onBdPlayerDamage( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime )
+{
+	friendly = isDefined( eAttacker ) && isPlayer( eAttacker ) && eAttacker != self && eAttacker.pers["team"] == self.pers["team"];
+	if ( isDefined( eAttacker ) && isPlayer( eAttacker ) && isBulletDamage( sMeansOfDeath ) )
+	{
+		item = itemForWeapon( sWeapon, eAttacker.pers["team"] == game["defenders"] );
+		if ( isDefined( item ) && item.damage != 1 )
+			iDamage = int( iDamage * item.damage + 0.5 );
+	}
+	if ( friendly && level.bd_teamDamage )
+	{
+		if ( isBulletDamage( sMeansOfDeath ) )
+			iDamage = int( iDamage * 0.33 + 0.5 );
+		else
+			iDamage = int( iDamage * 0.85 + 0.5 );
+		if ( iDamage < 1 )
+			iDamage = 1;
+	}
+	if ( isDefined( self.bd_armor ) && self.bd_armor > 0 && iDamage > 0 && !( friendly && level.friendlyfire == 0 ) && self armorCovers( sHitLoc, sMeansOfDeath ) )
+	{
+		healthDamage = int( iDamage * armorPenetration( sWeapon, sMeansOfDeath ) );
+		armorDamage = int( ( iDamage - healthDamage ) * 0.5 + 0.5 );
+		if ( armorDamage > self.bd_armor )
+		{
+			healthDamage = healthDamage + ( armorDamage - self.bd_armor ) * 2;
+			armorDamage = self.bd_armor;
+		}
+		self.bd_armor = self.bd_armor - armorDamage;
+		if ( self.bd_armor <= 0 )
+		{
+			self.bd_armor = 0;
+			self.bd_helmet = false;
+		}
+		if ( healthDamage < 1 )
+			healthDamage = 1;
+		iDamage = healthDamage;
+	}
+
+	self [[ level.bd_basePlayerDamage ]]( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime );
+}
+
+bdRoundFlow()
+{
+	level endon( "game_ended" );
+
+	swapScoresAtHalf();
+	level waittill( "prematch_over" );
+	swapScoresAtHalf();
+	// The stock rules read the team damage setting before this mode's own.
+	level.friendlyfire = level.bd_teamDamage;
+
+	// Every round, the first included, opens with a frozen buy phase.
+	if ( level.bd_freezeTime > 0 )
+	{
+		level.bd_freezing = true;
+		maps\mp\gametypes\_gamelogic::pauseTimer();
+		foreach ( player in level.players )
+		{
+			if ( isReallyAlive( player ) )
+				player freezeControlsWrapper( true );
+		}
+
+		timer = createServerFontString( "objective", 1.5 );
+		timer setPoint( "CENTER", "CENTER", 0, -60 );
+		timer.label = "BUY TIME ";
+		timer.color = ( 1, 1, 0 );
+		timer.archived = false;
+		for ( remaining = level.bd_freezeTime; remaining > 0; remaining-- )
+		{
+			timer setValue( remaining );
+			wait 1;
+		}
+		timer destroyElem();
+
+		level.bd_freezing = false;
+		foreach ( player in level.players )
+		{
+			if ( isReallyAlive( player ) )
+				player freezeControlsWrapper( false );
+		}
+		maps\mp\gametypes\_gamelogic::resumeTimer();
+	}
+
+	level.bd_buyEnd = getTime() + int( level.bd_buyTime * 1000 );
+}
+
+bdRoundEnd()
+{
+	level waittill( "game_ended", winner );
+
+	syncHalf();
+	attackers = game["attackers"];
+	defenders = game["defenders"];
+
+	if ( isDefined( winner ) && isString( winner ) && isPlayingTeam( winner ) )
+	{
+		loser = getOtherTeam( winner );
+
+		if ( bombFlag( "exploded" ) )
+		{
+			winReward = 3500;
+			winText = "Team award for winning by detonating the bomb";
+		}
+		else if ( bombFlag( "defused" ) )
+		{
+			winReward = 3500;
+			winText = "Team award for winning by defusing the bomb";
+		}
+		else
+		{
+			winReward = 3250;
+			winText = "Team award for winning the round";
+		}
+
+		timeExpired = winner == defenders && !bombFlag( "planted" ) && isDefined( level.aliveCount[attackers] ) && level.aliveCount[attackers] > 0;
+
+		lossLevel = game["bd_loss"][loser] + 1;
+		if ( lossLevel > 5 )
+			lossLevel = 5;
+		game["bd_loss"][loser] = lossLevel;
+		lossBonus = 1400 + 500 * ( lossLevel - 1 );
+
+		winLevel = game["bd_loss"][winner] - 1;
+		if ( winLevel < 0 )
+			winLevel = 0;
+		game["bd_loss"][winner] = winLevel;
+
+		foreach ( player in level.players )
+		{
+			if ( !isDefined( player.pers["bd_money"] ) )
+				continue;
+			team = player.pers["team"];
+			if ( team == winner )
+			{
+				player giveMoney( winReward, winText );
+			}
+			else if ( team == loser )
+			{
+				if ( team == attackers && timeExpired && isReallyAlive( player ) )
+					player iPrintLn( "No income for surviving after time ran out" );
+				else
+					player giveMoney( lossBonus, "Income for losing the round" );
+
+				if ( team == attackers && bombFlag( "planted" ) && !bombFlag( "exploded" ) )
+					player giveMoney( 800, "Team award for planting the bomb" );
+			}
+		}
+	}
+
+	saveGear();
+
+	// Counter-Strike halftime: every player changes team (the factions stay
+	// on their sides, so CT players become T), keeping their team's score.
+	game["bd_rounds"]++;
+	if ( level.bd_halfRounds > 0 && game["bd_rounds"] == level.bd_halfRounds )
+		swapTeamsAtHalf();
+}
+
+swapTeamsAtHalf()
+{
+	foreach ( player in level.players )
+	{
+		if ( !isDefined( player.pers["team"] ) || !isPlayingTeam( player.pers["team"] ) )
+			continue;
+		other = getOtherTeam( player.pers["team"] );
+		player.pers["team"] = other;
+		player.team = other;
+		player.sessionteam = other;
+		player.pers["bd_hasGear"] = false;
+		player iPrintLnBold( "HALFTIME - SWITCHING SIDES" );
+	}
+	// The scores follow the players, but the round that just ended is still
+	// being credited as this runs: they are swapped when the next round
+	// starts (swapScoresAtHalf).
+	game["bd_swapScores"] = true;
+}
+
+// Each team's score goes with its players to the other side: every copy the
+// stock rules keep (round wins, which the scoreboard and the win limit use,
+// and team scores) and the engine's own scoreboard value.
+swapScoresAtHalf()
+{
+	if ( !isDefined( game["bd_swapScores"] ) || !game["bd_swapScores"] )
+		return;
+	game["bd_swapScores"] = false;
+	foreach ( key in strTok( "roundsWon teamScores", " " ) )
+	{
+		if ( !isDefined( game[key] ) )
+			continue;
+		allies = game[key]["allies"];
+		game[key]["allies"] = game[key]["axis"];
+		game[key]["axis"] = allies;
+	}
+	foreach ( team in strTok( "allies axis", " " ) )
+	{
+		score = 0;
+		if ( isDefined( game["roundsWon"] ) && isDefined( game["roundsWon"][team] ) )
+			score = game["roundsWon"][team];
+		else if ( isDefined( game["teamScores"] ) && isDefined( game["teamScores"][team] ) )
+			score = game["teamScores"][team];
+		setTeamScore( team, score );
+	}
+}

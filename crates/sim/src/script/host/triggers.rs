@@ -941,6 +941,30 @@ pub(crate) fn dispatch_triggers(world: &mut World) {
             .filter(|(object, _)| !runtime.fired_once.contains(object))
             .filter_map(|(object, e)| Some((*object, fires(&e.classname)?)))
             .collect();
+        // Who stands where a use key would work a trigger, pressed or not.
+        let mut in_reach: Vec<u32> = Vec::new();
+        for (trigger, kind) in &triggers {
+            if *kind != Fires::Use {
+                continue;
+            }
+            let Some(volume) = volume(&mut runtime, &frame, *trigger) else {
+                continue;
+            };
+            let look_at = runtime.require_look_at.contains(trigger);
+            for (client, player, _) in &players {
+                if in_reach.contains(client) || !eligible(&runtime, &frame, *trigger, *client, true) {
+                    continue;
+                }
+                let (mins, maxs) = toucher(&mut runtime, &frame, *player);
+                if volume.touches(mins, maxs) && (!look_at || looks_into(&frame, *client, &volume)) {
+                    in_reach.push(*client);
+                }
+            }
+        }
+        for (client, _, _) in &players {
+            frame.client_meta_mut(crate::ClientId(*client)).use_trigger_reach =
+                in_reach.contains(client);
+        }
         for (trigger, kind) in triggers {
             let Some(volume) = volume(&mut runtime, &frame, trigger) else {
                 continue;

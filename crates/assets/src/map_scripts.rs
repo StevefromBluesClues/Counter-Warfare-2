@@ -1,5 +1,7 @@
 pub(crate) const T6_EQUIPMENT: &str = include_str!("t6_equipment.gsc.txt");
 
+pub(crate) const BOMB_DEFUSAL: &str = include_str!("bomb_defusal.gsc.txt");
+
 pub(crate) const RADIATION: &str = r#"main()
 {
     waittillframeend;

@@ -255,6 +255,7 @@ fn occupy_remote_scene_ents(
     };
     let gate = PlayerDrawGate {
         eyes_entity_num: eyes,
+        follow_entity_num: PlayerDrawGate::follow_entity_num(presented.player(local.0)),
         other_flags: presented
             .player(local.0)
             .map(|ps| ps.other_flags)
@@ -384,6 +385,7 @@ fn sync_remote_bodies(
     };
     let gate = PlayerDrawGate {
         eyes_entity_num: eyes,
+        follow_entity_num: PlayerDrawGate::follow_entity_num(presented.player(local.0)),
         other_flags: presented
             .player(local.0)
             .map(|ps| ps.other_flags)
@@ -514,6 +516,8 @@ struct RemotePoseFrame<'a> {
     pending: Vec<PendingBodySkin<'a>>,
 
     world_gun_gap: Option<WorldGunGap>,
+    binds: Option<&'a asset_anim::PlayerAnimLeafBinds>,
+    last_bound_legs: &'a mut std::collections::HashMap<u32, i32>,
 }
 
 struct RemoteBodySceneSlot<'a> {
@@ -554,6 +558,7 @@ fn pose_remote_bodies(
     mut trees: ResMut<RemoteBodyTrees>,
     mut pose_hashes: ResMut<RemoteSkinPoseHashes>,
     mut submit: ResMut<RemoteBodySkinnedQueue>,
+    mut last_bound_legs: Local<std::collections::HashMap<u32, i32>>,
     dpvs: (
         Query<&GlobalTransform, With<render_scene::FpvLens>>,
         Res<render_scene::LodRampSkinnedDvar>,
@@ -691,6 +696,8 @@ fn pose_remote_bodies(
         last_cache_hits: &last_cache_hits,
         pending: Vec::new(),
         world_gun_gap: None,
+        binds: sources.leaf_binds(),
+        last_bound_legs: &mut last_bound_legs,
     };
     for (identity, runtime, transform, mut bolts, remote) in &mut roots {
         let persist_key = u32::from(identity.number());
@@ -793,11 +800,36 @@ impl<'a> RemotePoseFrame<'a> {
                     .and_then(|index| self.tree.node(index).map(|n| n.name.as_str()));
             perf::corpse(1, None, Some(i64::from(ET_PLAYER_CORPSE)), legs_leaf);
         }
-        let Some(legs) = packed_anim(sample.anim.legs_anim) else {
+        let leaf = |raw: i32| {
+            PlayerAnimValue::from_raw((raw as u16) & PLAYER_ANIM_RAW_MASK)
+                .map_or(0, |value| value.effective_index())
+        };
+        let bound = |raw: i32| {
+            let index = leaf(raw);
+            index == 0 || self.binds.is_none_or(|binds| binds.is_bound(index))
+        };
+        let legs_anim = if bound(sample.anim.legs_anim) {
+            if leaf(sample.anim.legs_anim) != 0 && !is_corpse {
+                self.last_bound_legs
+                    .insert(persist_key, sample.anim.legs_anim);
+            }
+            sample.anim.legs_anim
+        } else {
+            self.last_bound_legs
+                .get(&persist_key)
+                .copied()
+                .unwrap_or(sample.anim.legs_anim)
+        };
+        let torso_anim = if bound(sample.anim.torso_anim) {
+            sample.anim.torso_anim
+        } else {
+            0
+        };
+        let Some(legs) = packed_anim(legs_anim) else {
             self.trees.remove(persist_key);
             return Ok(PoseOneOutcome::NoAnim);
         };
-        let torso = packed_anim(sample.anim.torso_anim).unwrap_or_else(zero_anim);
+        let torso = packed_anim(torso_anim).unwrap_or_else(zero_anim);
         let e_type = if is_corpse {
             ET_PLAYER_CORPSE
         } else {
@@ -834,17 +866,22 @@ impl<'a> RemotePoseFrame<'a> {
             if !soldier.owns_bodies(&bodies.0) {
                 return Err("soldier body owner differs from prepared bodies".into());
             }
-            let model_set = select_remote_models(
-                soldier,
-                weapons,
-                world_weapons,
-                weapon,
-                sample.weapon_model,
-                remote.shield,
-                weapons
-                    .zip(world_weapons)
-                    .and_then(|(w, c)| self.compositions.get(w, c, weapon, sample.weapon_model)),
-            )?;
+            let select = |weapon: u32| {
+                select_remote_models(
+                    soldier,
+                    weapons,
+                    world_weapons,
+                    weapon,
+                    sample.weapon_model,
+                    remote.shield,
+                    weapons.zip(world_weapons).and_then(|(w, c)| {
+                        self.compositions.get(w, c, weapon, sample.weapon_model)
+                    }),
+                )
+            };
+            // A held item with no world model (the bomb while planting or
+            // defusing) poses the body empty-handed rather than not at all.
+            let model_set = select(weapon).or_else(|error| select(0).map_err(|_| error))?;
             let binding = soldier.animation().map_err(str::to_owned)?;
             let advanced = advance_remote_tree(
                 binding,
@@ -1584,18 +1621,10 @@ fn remote_written_leaves_bound<'a>(
         if index == 0 {
             continue;
         }
-        any = true;
-        if !binds.is_bound(index) {
-            return false;
-        }
-        let Some(torso) =
-            PlayerAnimValue::from_raw((sample.anim.torso_anim as u16) & PLAYER_ANIM_RAW_MASK)
-        else {
-            continue;
-        };
-        let torso_index = torso.effective_index();
-        if torso_index != 0 && !binds.is_bound(torso_index) {
-            return false;
+        // One body on an unbound leaf (the bomb plant/defuse poses) falls back on
+        // its own; it must not stop every other body from posing.
+        if binds.is_bound(index) {
+            any = true;
         }
     }
     any

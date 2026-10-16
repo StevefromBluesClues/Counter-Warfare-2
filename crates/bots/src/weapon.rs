@@ -1,10 +1,20 @@
 use sim::{ClientLifecycle, LifeSequence};
 
-use crate::observation::{BotObservation, WeaponAction, WeaponSlot};
+use crate::observation::{BotObservation, WeaponAction, WeaponClass, WeaponSlot};
 
 /// Ticks a failed decision waits before the same state may commit again. Without
 /// it an impossible reload and an impossible switch can alternate every think.
 const RETRY_TICKS: u32 = 20;
+/// Two seconds with no enemy in view before topping up or going back to the
+/// main gun.
+const CALM_TICKS: u32 = 40;
+const PISTOL_DRAW_IN: f32 = 800.0;
+const SHOTGUN_FAR_IN: f32 = 900.0;
+const SHOTGUN_NEAR_IN: f32 = 450.0;
+
+fn dist_xy(a: [f32; 3], b: [f32; 3]) -> f32 {
+    (a[0] - b[0]).hypot(a[1] - b[1])
+}
 /// Slack over the simulator's own timing before a commitment is abandoned.
 const DEADLINE_SLACK_TICKS: u32 = 8;
 const TICK_MS: i32 = 50;
@@ -58,6 +68,8 @@ pub struct WeaponSkill {
     commitment: Option<Commitment>,
     status: WeaponStatus,
     retry_after_tick: u32,
+    /// The last tick an enemy was in view.
+    threat_tick: Option<u32>,
 }
 
 impl WeaponSkill {
@@ -90,6 +102,12 @@ impl WeaponSkill {
     /// One decision slice. `allow_start` is the caller's veto: an interaction
     /// close to completion is not displaced merely because a magazine is empty.
     pub fn update(&mut self, obs: &BotObservation, allow_start: bool) -> WeaponStatus {
+        if !obs.seen.is_empty() {
+            self.threat_tick = Some(obs.tick);
+        }
+        let calm = self
+            .threat_tick
+            .is_none_or(|at| obs.tick.saturating_sub(at) >= CALM_TICKS);
         if let Some(mut commitment) = self.commitment {
             let outcome = commitment.progress(obs);
             self.commitment = Some(commitment);
@@ -108,7 +126,7 @@ impl WeaponSkill {
         if !allow_start || obs.tick < self.retry_after_tick {
             return self.status;
         }
-        let Some(act) = choose(obs) else {
+        let Some(act) = choose(obs, calm) else {
             return self.status;
         };
         self.commitment = Some(Commitment::begin(act, obs));
@@ -202,18 +220,82 @@ fn held_slot(obs: &BotObservation) -> WeaponSlot {
     }
 }
 
+/// A shotgun is no use at range: a far enemy brings out the pistol, and one
+/// that comes close again brings the shotgun back.
+fn shotgun_reach(obs: &BotObservation, held: &WeaponSlot) -> Option<WeaponAct> {
+    let me = &obs.self_state;
+    let nearest = obs
+        .seen
+        .iter()
+        .map(|c| dist_xy(c.origin, me.origin))
+        .fold(f32::MAX, f32::min);
+    if nearest == f32::MAX {
+        return None;
+    }
+    if held.class == WeaponClass::Shotgun && !held.facts.quick_select && nearest > SHOTGUN_FAR_IN {
+        return obs
+            .inventory
+            .iter()
+            .find(|slot| slot.facts.quick_select && slot.is_loaded_gun())
+            .map(|slot| WeaponAct::Switch { to: slot.weapon });
+    }
+    if held.facts.quick_select && nearest < SHOTGUN_NEAR_IN {
+        return obs
+            .inventory
+            .iter()
+            .find(|slot| {
+                slot.class == WeaponClass::Shotgun && !slot.facts.quick_select && slot.is_loaded_gun()
+            })
+            .map(|slot| WeaponAct::Switch { to: slot.weapon });
+    }
+    None
+}
+
+/// With nobody in view a player gets ready for the next fight: back from the
+/// pistol to the main gun if it has ammo, and a half-empty magazine topped up.
+fn calm_upkeep(obs: &BotObservation, held: &WeaponSlot) -> Option<WeaponAct> {
+    let me = &obs.self_state;
+    if held.facts.quick_select {
+        let main = obs.inventory.iter().find(|slot| {
+            slot.weapon != me.weapon
+                && slot.facts.selectable
+                && !slot.facts.quick_select
+                && slot.facts.grenade.is_none()
+                && slot.facts.clip_size > 0
+                && slot.clip + slot.stock > 0
+        });
+        if let Some(main) = main {
+            return Some(WeaponAct::Switch { to: main.weapon });
+        }
+    }
+    let size = held.facts.clip_size;
+    (size > 1 && me.ammo_stock > 0 && me.ammo_clip * 2 < size).then_some(WeaponAct::Reload)
+}
+
 /// Combat equipment needs attention when the held magazine is empty. Reloading
 /// and switching are then compared on the simulator's own timings, with a
 /// visible threat deciding whether speed outranks keeping the current gun.
-fn choose(obs: &BotObservation) -> Option<WeaponAct> {
+fn choose(obs: &BotObservation, calm: bool) -> Option<WeaponAct> {
     let me = &obs.self_state;
-    if !me.weapon_action.is_settled() || me.ammo_clip > 0 {
+    if !me.weapon_action.is_settled() {
         return None;
     }
     let held = held_slot(obs);
     // An offhand or an item in hand is not a readiness decision.
     if obs.held().is_some_and(|slot| !slot.facts.selectable) {
         return None;
+    }
+    if let Some(act) = shotgun_reach(obs, &held) {
+        return Some(act);
+    }
+    if me.ammo_clip > 0 || calm {
+        // An empty magazine with nobody about is simply reloaded below.
+        if let Some(act) = calm.then(|| calm_upkeep(obs, &held)).flatten() {
+            return Some(act);
+        }
+        if me.ammo_clip > 0 {
+            return None;
+        }
     }
     let reload_ms = (me.ammo_stock > 0).then(|| held.reload_ms());
     let switch = obs
@@ -224,7 +306,11 @@ fn choose(obs: &BotObservation) -> Option<WeaponAct> {
         .min();
     match (switch, reload_ms) {
         (Some((switch_ms, to)), Some(reload_ms)) => {
-            let threatened = !obs.seen.is_empty();
+            // The pistol is drawn only when the enemy is too close to reload.
+            let threatened = obs
+                .seen
+                .iter()
+                .any(|c| dist_xy(c.origin, me.origin) <= PISTOL_DRAW_IN);
             Some(if threatened && switch_ms < reload_ms {
                 WeaponAct::Switch { to }
             } else {

@@ -1768,6 +1768,60 @@
           "vis_exp": "0"
         }
       }
+    ],
+    "item_copies": [
+      {
+        "index": 22,
+        "fields": {
+          "rect": {"y": 188},
+          "text_key": "COMPETITIVE BOMB DEFUSAL",
+          "text_literal": true,
+          "text_exp": "",
+          "vis_exp": "1",
+          "disabled_exp": "0",
+          "enable_dvar": "\"bd\" ",
+          "handlers": {
+            "action": [
+              {
+                "Script": "play mouse_click; exec \"ui_select_mode bd\";"
+              }
+            ],
+            "focus": [
+              {"Script": "play mouse_over; setItemColor self backcolor 0 0 0 1;"},
+              {"SetLocalVar": {"kind": 3, "name": "ui_menuAButton", "expr": "1"}},
+              {"SetLocalVar": {"kind": 6, "name": "ui_info_name", "expr": "s:434f4d504554495449564520424f4d42204445465553414c"}},
+              {"SetLocalVar": {"kind": 6, "name": "ui_info_desc", "expr": "s:53656172636820616e642044657374726f7920776974682074686520436f756e7465722d537472696b6520636f6d70657469746976652072756c65733a206669766520616761696e737420666976652c20666972737420746f20313320726f756e6473207769746820612068616c6674696d652073696465207377697463682e205374617274207769746820243830302c2062757920796f7572206f776e2061726d6f7220616e6420646566757365206b6974732c20616e6420776174636820796f757220666972653a207465616d2064616d616765206973206f6e2e"}},
+              {"SetLocalVar": {"kind": 6, "name": "ui_info_icon", "expr": "op 74 s:6d702f67616d6554797065735461626c652e637376 op 17 0 op 17 s:7364 op 17 3"}}
+            ]
+          }
+        }
+      },
+      {
+        "index": 22,
+        "fields": {
+          "rect": {"y": 208},
+          "text_key": "CASUAL BOMB DEFUSAL",
+          "text_literal": true,
+          "text_exp": "",
+          "vis_exp": "1",
+          "disabled_exp": "0",
+          "enable_dvar": "\"bdc\" ",
+          "handlers": {
+            "action": [
+              {
+                "Script": "play mouse_click; exec \"ui_select_mode bdc\";"
+              }
+            ],
+            "focus": [
+              {"Script": "play mouse_over; setItemColor self backcolor 0 0 0 1;"},
+              {"SetLocalVar": {"kind": 3, "name": "ui_menuAButton", "expr": "1"}},
+              {"SetLocalVar": {"kind": 6, "name": "ui_info_name", "expr": "s:43415355414c20424f4d42204445465553414c"}},
+              {"SetLocalVar": {"kind": 6, "name": "ui_info_desc", "expr": "s:53656172636820616e642044657374726f7920776974682074686520436f756e7465722d537472696b652063617375616c2072756c65733a206e696e6520616761696e7374206e696e652c20666972737420746f203820726f756e64732e2045766572796f6e6520737061776e732077697468204b65766c617220616e6420612068656c6d65742c2065766572792043542067657473206120646566757365206b69742c206d6f6e65792073746172747320617420243130303020616e64207468657265206973206e6f207465616d2064616d6167652e"}},
+              {"SetLocalVar": {"kind": 6, "name": "ui_info_icon", "expr": "op 74 s:6d702f67616d6554797065735461626c652e637376 op 17 0 op 17 s:7364 op 17 3"}}
+            ]
+          }
+        }
+      }
     ]
   }
 ,

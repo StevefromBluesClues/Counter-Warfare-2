@@ -95,6 +95,9 @@ pub struct ClientMatchState {
     pub item_use_spawn_ms: i32,
     pub item_use_entity: Option<crate::EntityRef>,
     pub item_use_press_ms: i32,
+    /// Standing in a script use trigger this player may use (planting or
+    /// defusing a bomb): the use key belongs to it, not to items on the floor.
+    pub(crate) use_trigger_reach: bool,
 
     pub(crate) ammo_clip: i32,
 

@@ -239,7 +239,12 @@ fn update_overhead_names(
         }
         return;
     }
-    if view.in_killcam() || presented.alive_player(local.0).is_none() {
+    // Spectating a teammate shows the names they would see.
+    let following = net::PlayerDrawGate::follow_entity_num(Some(ps))
+        .and_then(|client| u32::try_from(client).ok())
+        .filter(|client| *client != local.0.0)
+        .map(sim::ClientId);
+    if view.in_killcam() || (presented.alive_player(local.0).is_none() && following.is_none()) {
         memory.seen.clear();
         return;
     }
@@ -261,14 +266,14 @@ fn update_overhead_names(
     let Some((camera, transform)) = cameras.iter().find(|(c, _)| c.is_active) else {
         return;
     };
-    let Some(world) = prediction
+    let world = prediction
         .as_ref()
         .filter(|p| p.0.is_armed() && p.0.world().has_world_clip())
-        .map(|p| p.0.world())
-    else {
+        .map(|p| p.0.world());
+    if world.is_none() && following.is_none() {
         gaps.raise(GapCause::OverheadVisibilityUnavailable);
         return;
-    };
+    }
     let font_name = ui_get_font_handle(2, surface.scale_virtual_to_real()[1], 1.0);
     let Some(font) = catalog.as_ref().and_then(|c| c.font(font_name)) else {
         gaps.raise(GapCause::OverheadFontUnavailable);
@@ -287,7 +292,7 @@ fn update_overhead_names(
         let Some(client) = identity.client() else {
             continue;
         };
-        if client == local.0 {
+        if client == local.0 || Some(client) == following {
             continue;
         }
         let Some(meta) = snapshot.meta.for_client(client) else {
@@ -337,14 +342,18 @@ fn update_overhead_names(
         {
             continue;
         }
-        let hit = world.trace_world(
-            eye.to_array(),
-            head.to_array(),
-            [0.0; 3],
-            [0.0; 3],
-            OVERHEAD_TRACE_MASK,
-        );
-        let visible = hit.fraction >= 1.0 && hit.startsolid == 0;
+        // Without a local collision world (a dead spectator) teammates'
+        // names show regardless of walls, as in Counter-Strike; enemies never do.
+        let visible = world.map_or(!enemy, |world| {
+            let hit = world.trace_world(
+                eye.to_array(),
+                head.to_array(),
+                [0.0; 3],
+                [0.0; 3],
+                OVERHEAD_TRACE_MASK,
+            );
+            hit.fraction >= 1.0 && hit.startsolid == 0
+        });
         let aim = aimed_distance(eye, forward, origin, head).filter(|_| visible);
         candidates.push((
             identity.number(),

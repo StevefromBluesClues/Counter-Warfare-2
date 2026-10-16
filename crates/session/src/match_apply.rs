@@ -1046,7 +1046,7 @@ fn preflight_match_install(
             })
             .collect(),
     };
-    let startup = sim::script::Iw4Startup::new(&sources, gametype, zone);
+    let startup = sim::script::Iw4Startup::new(&sources, gametype, zone, kind.script_overlay());
     let roots: Vec<&str> = startup.roots.iter().map(String::as_str).collect();
     let scripts = sim::script::Program::load(&sources, &roots, &sim::script::Catalog::iw4())
         .map_err(|e| script_refusal(zone, gametype, "compile", &e))?;
@@ -1078,6 +1078,14 @@ fn preflight_match_install(
     }
     script_dvars.push(("mapname".into(), zone.to_owned()));
     script_dvars.push(("g_gametype".into(), gametype.to_owned()));
+    if kind.is_bomb_defusal() {
+        let mode = if kind == gamemode_iw4::GameModeKind::BombDefusalCasual {
+            "casual"
+        } else {
+            "competitive"
+        };
+        script_dvars.push((gamemode_iw4::bomb_defusal::MODE_DVAR.into(), mode.into()));
+    }
     script_dvars.push(("sv_maxclients".into(), "18".into()));
     for (name, value) in rules.map_or(&[][..], |rules| &rules.0) {
         match script_dvars
@@ -1212,7 +1220,11 @@ fn objective_bindings<'a>(
         absent_effects: Vec::new(),
     };
     match kind {
-        GameModeKind::SearchAndDestroy | GameModeKind::Sabotage | GameModeKind::Demolition => {
+        GameModeKind::SearchAndDestroy
+        | GameModeKind::BombDefusal
+        | GameModeKind::BombDefusalCasual
+        | GameModeKind::Sabotage
+        | GameModeKind::Demolition => {
             bindings.models.push(pair(&host.bomb, &native.bomb)?);
             bindings
                 .effects
@@ -1303,7 +1315,7 @@ fn match_kind(
     match std::env::var("IW4L_GAMETYPE") {
         Ok(s) if !s.trim().is_empty() => gamemode_iw4::GameModeKind::parse_ascii_ignore_case(&s)
             .ok_or("IW4L_GAMETYPE names no known gametype (gsc.mode.out-of-scope)"),
-        _ => Ok(gamemode_iw4::GameModeKind::FreeForAll),
+        _ => Ok(gamemode_iw4::GameModeKind::BombDefusal),
     }
 }
 

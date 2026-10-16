@@ -1,3 +1,11 @@
+Counter-Warfare 2
+
+Copyright 2026 Counter-Warfare 2 contributors
+
+Counter-Warfare 2 is a modified version of IW4L. It adds the Bomb Defusal game
+modes and reworks the bots; the files changed from IW4L are listed in
+CHANGES.md.
+
 IW4L
 
 Copyright 2026 vladtrc
@@ -5,7 +13,8 @@ Copyright 2026 vladtrc
 IW4L was originally developed by vladtrc.
 https://github.com/vladtrc/iw4L
 
-IW4L is licensed under the Apache License, Version 2.0; see LICENSE.
+IW4L and Counter-Warfare 2 are licensed under the Apache License, Version 2.0;
+see LICENSE.
 
 --------------------------------------------------------------------------------
 Third-party material bundled with this repository

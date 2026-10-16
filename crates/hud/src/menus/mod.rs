@@ -35,6 +35,7 @@ pub(super) const DVAR_FOCUS: i32 = 0x10;
 pub(super) const MAX_SCRIPT_DEPTH: u32 = 16;
 const MAIN_MENU_DVAR: &str = "g_scriptMainMenu";
 const FALLBACK_MAIN_MENU: &str = "class";
+pub(crate) const BD_TEAM_MENU: &str = "bd_team";
 const SCOREBOARD_MENU: &str = "scoreboard";
 
 pub(super) fn is_focusable(item: &asset_game::MenuItem) -> bool {

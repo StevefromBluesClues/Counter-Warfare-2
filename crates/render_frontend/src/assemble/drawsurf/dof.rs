@@ -151,7 +151,10 @@ fn update_dof(
         *scene = DepthOfField::default();
         return;
     };
-    let ads = ps.f_weapon_pos_frac;
+    // Spectating someone shows their view without the viewer's own focus
+    // effects (aim-down-sights autofocus, the death blur).
+    let following = net::PlayerDrawGate::follow_entity_num(Some(ps)).is_some();
+    let ads = if following { 0.0 } else { ps.f_weapon_pos_frac };
 
     let mut target = DepthOfField {
         near_start: 1.0,
@@ -161,7 +164,7 @@ fn update_dof(
         near_blur: 6.0,
         ..Default::default()
     };
-    if ads != 0.0 || ps.pm_type >= 8 {
+    if ads != 0.0 || (ps.pm_type >= 8 && !following) {
         if let Some(clip) = clip.0.as_ref() {
             let hit = clip
                 .sweep_box(
@@ -236,7 +239,10 @@ fn update_dof(
         .snapshot()
         .and_then(|snapshot| snapshot.meta.for_client(local.0))
         .map(|meta| meta.view_effects.depth_of_field)
-        .filter(sim::ScriptDepthOfField::overrides_scene);
+        .filter(sim::ScriptDepthOfField::overrides_scene)
+        // The death blur the scripts set lingers into spectating, where it
+        // blurred whatever was close to the followed player's view.
+        .filter(|_| !following);
     if let Some(script) = script_dof {
         scene.near_start = script.near_start;
         scene.near_end = script.near_end;

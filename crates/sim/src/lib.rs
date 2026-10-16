@@ -111,6 +111,10 @@ pub const ENEMY_BOTS_DVAR: &str = "scr_game_enemybots";
 pub const FRIENDLY_BOTS_DVAR: &str = "scr_game_friendlybots";
 
 pub const TEAM_MENU: &str = "team_marinesopfor";
+
+pub const SPECTATE_MENU: &str = "iw4l_spectate";
+pub const SPECTATE_NEXT: &str = "next";
+pub const SPECTATE_PREVIOUS: &str = "previous";
 pub use match_state::{
     ClassDef, ClassRejectReason, ClientLifecycle, ClientSnapshotMeta,
     ConfigurationChangeRejectReason, DroppedItemAmmo, EntityEventPayload, EntityEventRecord,

@@ -65,6 +65,7 @@ pub fn install_frontend_menus(catalog: &mut asset_game::MenuCatalog) -> Result<(
     catalog.load_definitions(include_str!("../menus/controller.json"))?;
     catalog.load_definitions(include_str!("../menus/game_folders.json"))?;
     catalog.load_definitions(include_str!("../menus/community_servers.json"))?;
+    catalog.load_definitions(include_str!("../menus/bomb_defusal.json"))?;
     if let Some(item) = catalog
         .menus
         .get_mut("options_community_servers")

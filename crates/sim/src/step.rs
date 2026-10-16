@@ -956,6 +956,15 @@ fn apply_action(
         } => {
             let menu = crate::menu_response_text(&menu);
             let response = crate::menu_response_text(&response);
+            if menu == crate::SPECTATE_MENU {
+                let forward = response != crate::SPECTATE_PREVIOUS;
+                return if crate::script::host::spectators::request_cycle(world.ecs(), id.0, forward)
+                {
+                    ActionOutcome::Accepted
+                } else {
+                    ActionOutcome::Refused
+                };
+            }
             crate::script::note_team_answer(world.ecs(), id.0, menu);
             if let Some(outcome) = answer_custom_class(world, id, menu, response) {
                 return outcome;

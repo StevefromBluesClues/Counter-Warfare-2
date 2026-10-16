@@ -30,6 +30,19 @@ pub struct BotIntent {
     pub reload: bool,
     pub crouch: bool,
     pub sprint: bool,
+    /// Turn the view at a relaxed, steady rate: nothing to react to.
+    pub calm: bool,
+    /// Offhand buttons (frag or smoke) held this tick to throw a grenade.
+    pub throw_buttons: u32,
+    /// Aim exactly, without the bot's personal aim error, and only fire when
+    /// on the point: shooting out a pane rather than a person.
+    pub precise: bool,
+    /// Jump this tick (getting out of a hole the walk cannot climb).
+    pub jump: bool,
+    /// Aim down the sights.
+    pub ads: bool,
+    /// Walk slowly enough that footsteps make no sound.
+    pub quiet: bool,
     /// The weapon the command asks for. `None` keeps the observed weapon; a
     /// selection is held through every phase of the change, not pulsed once.
     pub weapon: Option<u16>,
@@ -48,6 +61,12 @@ impl Default for BotIntent {
             reload: false,
             crouch: false,
             sprint: false,
+            calm: false,
+            throw_buttons: 0,
+            precise: false,
+            jump: false,
+            ads: false,
+            quiet: false,
             weapon: None,
             path: PathOutcome::None,
         }

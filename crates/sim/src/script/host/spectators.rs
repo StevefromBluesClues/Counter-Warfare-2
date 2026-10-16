@@ -11,6 +11,21 @@ pub(crate) struct Spectator {
     pub defaults: Option<([f32; 3], [f32; 3])>,
     pub buttons: u32,
     pub free: bool,
+    /// A next (positive) or previous (negative) request the client sent as an
+    /// action, since a dead client produces no user commands to read buttons from.
+    pub requested: i8,
+}
+
+pub(crate) fn request_cycle(world: &mut World, client: u32, forward: bool) -> bool {
+    let mut runtime = world.resource_mut::<Runtime>();
+    let Some(slot) = runtime.players.get_mut(&client) else {
+        return false;
+    };
+    if &*slot.sessionstate != "spectator" {
+        return false;
+    }
+    slot.spectator.requested = if forward { 1 } else { -1 };
+    true
 }
 
 fn permitted(slot: &super::players::PlayerSlot, team: &str) -> bool {
@@ -143,9 +158,12 @@ fn update(world: &mut World, input: bool) {
             slot.spectator.buttons = buttons;
         }
         let forced = u32::try_from(slot.seat.spectator_client).ok();
+        let requested = std::mem::take(&mut slot.spectator.requested);
         let cycle = input
             && !archived
-            && pressed & (playerstate_iw4::buttons::ATTACK | playerstate_iw4::buttons::ADS) != 0;
+            && (requested != 0
+                || pressed & (playerstate_iw4::buttons::ATTACK | playerstate_iw4::buttons::ADS)
+                    != 0);
         if let Some(forced) = forced {
             slot.spectator.target = allowed.contains(&forced).then_some(forced);
             slot.spectator.free = false;
@@ -156,7 +174,8 @@ fn update(world: &mut World, input: bool) {
             slot.spectator.target = None;
             slot.spectator.free = true;
         } else if cycle {
-            let backward = pressed & playerstate_iw4::buttons::ADS != 0;
+            let backward =
+                requested < 0 || (requested == 0 && pressed & playerstate_iw4::buttons::ADS != 0);
             slot.spectator.target = if allowed.is_empty() {
                 None
             } else {

@@ -3,6 +3,7 @@
 
 pub mod anchors;
 pub mod animated_models;
+pub mod bomb_defusal;
 pub mod damage_feedback;
 pub mod dd;
 pub mod dom;

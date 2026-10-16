@@ -1,0 +1,8367 @@
+[
+ {
+  "name": "bd_buy",
+  "rect": {
+   "x": 0,
+   "y": 0,
+   "w": 640,
+   "h": 480,
+   "horz_align": 4,
+   "vert_align": 4
+  },
+  "handlers": {
+   "open": [
+    {
+     "Script": "focusFirst;"
+    }
+   ],
+   "esc": [
+    {
+     "Script": "close self;"
+    }
+   ]
+  },
+  "items": [
+   {
+    "name": "bg_dim",
+    "background": "white",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.62
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_clouds",
+    "background": "mw2_main_cloud_overlay",
+    "rect": {
+     "x": -107,
+     "y": 0,
+     "w": 854,
+     "h": 480,
+     "horz_align": 0,
+     "vert_align": 0
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.14
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_glow",
+    "background": "mockup_bg_glow",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.35
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "panel",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 370,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.55
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_top",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_bottom",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": 185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "eyebrow",
+    "text_key": "BOMB DEFUSAL",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -192,
+     "w": 200,
+     "h": 14,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.5
+    ],
+    "font_enum": 3,
+    "text_scale": 0.22,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "title_rule",
+    "background": "white",
+    "rect": {
+     "x": -258,
+     "y": -146,
+     "w": 516,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.22
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "title",
+    "text_key": "BUY MENU",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -176,
+     "w": 300,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.55,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "money",
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": 40,
+     "y": -178,
+     "w": 218,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.5,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "text_exp": "s:24 op 5 op 38 s:75695f62645f6d6f6e6579 op 1"
+   },
+   {
+    "name": "hint",
+    "text_key": "Buy during freeze time and the first seconds of the round, near your spawn.  ESC closes.",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 158,
+     "w": 516,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.55
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "cat_pistols",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "1.  PISTOLS",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -130,
+     "w": 300,
+     "h": 26,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy_pistols;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "cat_smgs",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "2.  SMGs",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -100,
+     "w": 300,
+     "h": 26,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy_smgs;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "cat_rifles",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "3.  RIFLES",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -70,
+     "w": 300,
+     "h": 26,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy_rifles;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "cat_heavy",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "4.  HEAVY",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -40,
+     "w": 300,
+     "h": 26,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy_heavy;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "cat_grenades",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "5.  GRENADES",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -10,
+     "w": 300,
+     "h": 26,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy_grenades;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "cat_gear",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "6.  EQUIPMENT",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 20,
+     "w": 300,
+     "h": 26,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy_gear;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "autobuy",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "AUTO-BUY",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 62,
+     "w": 300,
+     "h": 26,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; scriptMenuResponse bd:autobuy; close self;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "close",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "CLOSE",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 92,
+     "w": 300,
+     "h": 26,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "side_t",
+    "text_key": "TERRORIST LOADOUT",
+    "text_literal": true,
+    "rect": {
+     "x": 60,
+     "y": -130,
+     "w": 198,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.9,
+     0.75,
+     0.35,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.3,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "side_ct",
+    "text_key": "COUNTER-TERRORIST LOADOUT",
+    "text_literal": true,
+    "rect": {
+     "x": 40,
+     "y": -130,
+     "w": 218,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.45,
+     0.7,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.3,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   }
+  ]
+ },
+ {
+  "name": "bd_buy_pistols",
+  "rect": {
+   "x": 0,
+   "y": 0,
+   "w": 640,
+   "h": 480,
+   "horz_align": 4,
+   "vert_align": 4
+  },
+  "handlers": {
+   "open": [
+    {
+     "Script": "focusFirst;"
+    }
+   ],
+   "esc": [
+    {
+     "Script": "close self;"
+    }
+   ]
+  },
+  "items": [
+   {
+    "name": "bg_dim",
+    "background": "white",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.62
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_clouds",
+    "background": "mw2_main_cloud_overlay",
+    "rect": {
+     "x": -107,
+     "y": 0,
+     "w": 854,
+     "h": 480,
+     "horz_align": 0,
+     "vert_align": 0
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.14
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_glow",
+    "background": "mockup_bg_glow",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.35
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "panel",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 370,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.55
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_top",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_bottom",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": 185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "eyebrow",
+    "text_key": "BOMB DEFUSAL",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -192,
+     "w": 200,
+     "h": 14,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.5
+    ],
+    "font_enum": 3,
+    "text_scale": 0.22,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "title_rule",
+    "background": "white",
+    "rect": {
+     "x": -258,
+     "y": -146,
+     "w": 516,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.22
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "title",
+    "text_key": "PISTOLS",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -176,
+     "w": 300,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.55,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "money",
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": 40,
+     "y": -178,
+     "w": 218,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.5,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "text_exp": "s:24 op 5 op 38 s:75695f62645f6d6f6e6579 op 1"
+   },
+   {
+    "name": "hint",
+    "text_key": "Buy during freeze time and the first seconds of the round, near your spawn.  ESC closes.",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 158,
+     "w": 516,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.55
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "col_bonus",
+    "text_key": "BONUS WHILE HELD",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -150,
+     "w": 200,
+     "h": 18,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.45
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "buy_glock",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "USP .45",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -128,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:glock;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "bonus_glock",
+    "text_key": "-13% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -128,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "price_glock",
+    "text_key": "$200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 200"
+   },
+   {
+    "name": "price_red_glock",
+    "text_key": "$200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 200"
+   },
+   {
+    "name": "buy_usp_silencer",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "USP .45 Silencer",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -128,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:usp_silencer;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "bonus_usp_silencer",
+    "text_key": "-5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -128,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_usp_silencer",
+    "text_key": "$200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 200"
+   },
+   {
+    "name": "price_red_usp_silencer",
+    "text_key": "$200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 200"
+   },
+   {
+    "name": "buy_elite",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Akimbo M9",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -103,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:elite;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_elite",
+    "text_key": "-2% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -103,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_elite",
+    "text_key": "$300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 300"
+   },
+   {
+    "name": "price_red_elite",
+    "text_key": "$300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 300"
+   },
+   {
+    "name": "buy_p250",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "M9",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -78,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:p250;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_p250",
+    "text_key": "FMJ, Steady Aim, -10% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -78,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_p250",
+    "text_key": "$300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 300"
+   },
+   {
+    "name": "price_red_p250",
+    "text_key": "$300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 300"
+   },
+   {
+    "name": "buy_tec9",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "TMP",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -53,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:tec9;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "bonus_tec9",
+    "text_key": "-2% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -53,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "price_tec9",
+    "text_key": "$500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 500"
+   },
+   {
+    "name": "price_red_tec9",
+    "text_key": "$500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 500"
+   },
+   {
+    "name": "buy_fiveseven",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "M93 Raffica",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -53,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:fiveseven;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "bonus_fiveseven",
+    "text_key": "-5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -53,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_fiveseven",
+    "text_key": "$500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 500"
+   },
+   {
+    "name": "price_red_fiveseven",
+    "text_key": "$500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 500"
+   },
+   {
+    "name": "buy_cz75a",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "G18",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -28,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:cz75a;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_cz75a",
+    "text_key": "-2% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -28,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_cz75a",
+    "text_key": "$500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 500"
+   },
+   {
+    "name": "price_red_cz75a",
+    "text_key": "$500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 500"
+   },
+   {
+    "name": "buy_deagle",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Desert Eagle",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -3,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:deagle;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_deagle",
+    "text_key": "-2% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -3,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_deagle",
+    "text_key": "$700",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -3,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 700"
+   },
+   {
+    "name": "price_red_deagle",
+    "text_key": "$700",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -3,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 700"
+   },
+   {
+    "name": "buy_revolver",
+    "item_type": 1,
+    "style": 1,
+    "text_key": ".44 Magnum",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 22,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:revolver;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_revolver",
+    "text_key": "-2% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": 22,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_revolver",
+    "text_key": "$600",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": 22,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 600"
+   },
+   {
+    "name": "price_red_revolver",
+    "text_key": "$600",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": 22,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 600"
+   },
+   {
+    "name": "back",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "BACK",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 128,
+     "w": 160,
+     "h": 24,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "name": "bd_buy_smgs",
+  "rect": {
+   "x": 0,
+   "y": 0,
+   "w": 640,
+   "h": 480,
+   "horz_align": 4,
+   "vert_align": 4
+  },
+  "handlers": {
+   "open": [
+    {
+     "Script": "focusFirst;"
+    }
+   ],
+   "esc": [
+    {
+     "Script": "close self;"
+    }
+   ]
+  },
+  "items": [
+   {
+    "name": "bg_dim",
+    "background": "white",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.62
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_clouds",
+    "background": "mw2_main_cloud_overlay",
+    "rect": {
+     "x": -107,
+     "y": 0,
+     "w": 854,
+     "h": 480,
+     "horz_align": 0,
+     "vert_align": 0
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.14
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_glow",
+    "background": "mockup_bg_glow",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.35
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "panel",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 370,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.55
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_top",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_bottom",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": 185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "eyebrow",
+    "text_key": "BOMB DEFUSAL",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -192,
+     "w": 200,
+     "h": 14,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.5
+    ],
+    "font_enum": 3,
+    "text_scale": 0.22,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "title_rule",
+    "background": "white",
+    "rect": {
+     "x": -258,
+     "y": -146,
+     "w": 516,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.22
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "title",
+    "text_key": "SMGs",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -176,
+     "w": 300,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.55,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "money",
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": 40,
+     "y": -178,
+     "w": 218,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.5,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "text_exp": "s:24 op 5 op 38 s:75695f62645f6d6f6e6579 op 1"
+   },
+   {
+    "name": "hint",
+    "text_key": "Buy during freeze time and the first seconds of the round, near your spawn.  ESC closes.",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 158,
+     "w": 516,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.55
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "col_bonus",
+    "text_key": "BONUS WHILE HELD",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -150,
+     "w": 200,
+     "h": 18,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.45
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "buy_mac10",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Mini-Uzi",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -128,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:mac10;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "bonus_mac10",
+    "text_key": "Steady Aim, +13% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -128,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "price_mac10",
+    "text_key": "$1050",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1050"
+   },
+   {
+    "name": "price_red_mac10",
+    "text_key": "$1050",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1050"
+   },
+   {
+    "name": "buy_mp9",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Vector",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -128,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:mp9;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "bonus_mp9",
+    "text_key": "Steady Aim, +8% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -128,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_mp9",
+    "text_key": "$1250",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1250"
+   },
+   {
+    "name": "price_red_mp9",
+    "text_key": "$1250",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1250"
+   },
+   {
+    "name": "buy_mp7",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "MP5K",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -103,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:mp7;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_mp7",
+    "text_key": "Steady Aim, +5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -103,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_mp7",
+    "text_key": "$1500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1500"
+   },
+   {
+    "name": "price_red_mp7",
+    "text_key": "$1500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1500"
+   },
+   {
+    "name": "buy_mp5sd",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "MP5K Silencer",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -78,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:mp5sd;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_mp5sd",
+    "text_key": "Steady Aim, +5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -78,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_mp5sd",
+    "text_key": "$1500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1500"
+   },
+   {
+    "name": "price_red_mp5sd",
+    "text_key": "$1500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1500"
+   },
+   {
+    "name": "buy_ump45",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "UMP45",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -53,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:ump45;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_ump45",
+    "text_key": "Steady Aim, +3% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -53,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_ump45",
+    "text_key": "$1200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1200"
+   },
+   {
+    "name": "price_red_ump45",
+    "text_key": "$1200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1200"
+   },
+   {
+    "name": "buy_p90",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "P90",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -28,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:p90;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_p90",
+    "text_key": "Steady Aim, +23% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -28,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_p90",
+    "text_key": "$2350",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 2350"
+   },
+   {
+    "name": "price_red_p90",
+    "text_key": "$2350",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 2350"
+   },
+   {
+    "name": "buy_bizon",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "PP2000 Ext. Mags",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -3,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:bizon;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_bizon",
+    "text_key": "Steady Aim, +44% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -3,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_bizon",
+    "text_key": "$1400",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -3,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1400"
+   },
+   {
+    "name": "price_red_bizon",
+    "text_key": "$1400",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -3,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1400"
+   },
+   {
+    "name": "back",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "BACK",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 128,
+     "w": 160,
+     "h": 24,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "name": "bd_buy_rifles",
+  "rect": {
+   "x": 0,
+   "y": 0,
+   "w": 640,
+   "h": 480,
+   "horz_align": 4,
+   "vert_align": 4
+  },
+  "handlers": {
+   "open": [
+    {
+     "Script": "focusFirst;"
+    }
+   ],
+   "esc": [
+    {
+     "Script": "close self;"
+    }
+   ]
+  },
+  "items": [
+   {
+    "name": "bg_dim",
+    "background": "white",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.62
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_clouds",
+    "background": "mw2_main_cloud_overlay",
+    "rect": {
+     "x": -107,
+     "y": 0,
+     "w": 854,
+     "h": 480,
+     "horz_align": 0,
+     "vert_align": 0
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.14
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_glow",
+    "background": "mockup_bg_glow",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.35
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "panel",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 370,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.55
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_top",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_bottom",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": 185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "eyebrow",
+    "text_key": "BOMB DEFUSAL",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -192,
+     "w": 200,
+     "h": 14,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.5
+    ],
+    "font_enum": 3,
+    "text_scale": 0.22,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "title_rule",
+    "background": "white",
+    "rect": {
+     "x": -258,
+     "y": -146,
+     "w": 516,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.22
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "title",
+    "text_key": "RIFLES",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -176,
+     "w": 300,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.55,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "money",
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": 40,
+     "y": -178,
+     "w": 218,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.5,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "text_exp": "s:24 op 5 op 38 s:75695f62645f6d6f6e6579 op 1"
+   },
+   {
+    "name": "hint",
+    "text_key": "Buy during freeze time and the first seconds of the round, near your spawn.  ESC closes.",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 158,
+     "w": 516,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.55
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "col_bonus",
+    "text_key": "BONUS WHILE HELD",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -150,
+     "w": 200,
+     "h": 18,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.45
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "buy_galilar",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "TAR-21",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -128,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:galilar;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "bonus_galilar",
+    "text_key": "Steady Aim, -9% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -128,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "price_galilar",
+    "text_key": "$1800",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1800"
+   },
+   {
+    "name": "price_red_galilar",
+    "text_key": "$1800",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1800"
+   },
+   {
+    "name": "buy_famas",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "FAMAS",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -128,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:famas;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "bonus_famas",
+    "text_key": "Steady Aim, +5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -128,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_famas",
+    "text_key": "$2050",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 2050"
+   },
+   {
+    "name": "price_red_famas",
+    "text_key": "$2050",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 2050"
+   },
+   {
+    "name": "buy_ak47",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "AK-47",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -103,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:ak47;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "bonus_ak47",
+    "text_key": "FMJ, Sleight of Hand, +8% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -103,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "price_ak47",
+    "text_key": "$2700",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 2700"
+   },
+   {
+    "name": "price_red_ak47",
+    "text_key": "$2700",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 2700"
+   },
+   {
+    "name": "buy_m4a1",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "M4A1",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -103,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:m4a1;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "bonus_m4a1",
+    "text_key": "FMJ, Sleight of Hand, +39% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -103,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_m4a1",
+    "text_key": "$3100",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 3100"
+   },
+   {
+    "name": "price_red_m4a1",
+    "text_key": "$3100",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 3100"
+   },
+   {
+    "name": "buy_m4a1_silencer",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "M4A1 Silencer",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -78,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:m4a1_silencer;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "bonus_m4a1_silencer",
+    "text_key": "FMJ, Sleight of Hand, +38% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -78,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_m4a1_silencer",
+    "text_key": "$2900",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 2900"
+   },
+   {
+    "name": "price_red_m4a1_silencer",
+    "text_key": "$2900",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 2900"
+   },
+   {
+    "name": "buy_sg556",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "F2000 ACOG",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -53,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:sg556;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "bonus_sg556",
+    "text_key": "FMJ, Sleight of Hand, -6% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -53,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "price_sg556",
+    "text_key": "$3000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 3000"
+   },
+   {
+    "name": "price_red_sg556",
+    "text_key": "$3000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 3000"
+   },
+   {
+    "name": "buy_aug",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "AUG HBAR ACOG",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -53,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:aug;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "bonus_aug",
+    "text_key": "FMJ, Sleight of Hand, +9% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -53,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_aug",
+    "text_key": "$3300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 3300"
+   },
+   {
+    "name": "price_red_aug",
+    "text_key": "$3300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 3300"
+   },
+   {
+    "name": "buy_ssg08",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "M21 EBR",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -28,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:ssg08;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_ssg08",
+    "text_key": "Quickdraw",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -28,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_ssg08",
+    "text_key": "$1700",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1700"
+   },
+   {
+    "name": "price_red_ssg08",
+    "text_key": "$1700",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1700"
+   },
+   {
+    "name": "buy_awp",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Intervention",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -3,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:awp;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_awp",
+    "text_key": "FMJ, Quickdraw",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -3,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_awp",
+    "text_key": "$4750",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -3,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 4750"
+   },
+   {
+    "name": "price_red_awp",
+    "text_key": "$4750",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -3,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 4750"
+   },
+   {
+    "name": "buy_g3sg1",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "WA2000",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 22,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:g3sg1;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "bonus_g3sg1",
+    "text_key": "FMJ, Sleight of Hand, Quickdraw, +5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": 22,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "price_g3sg1",
+    "text_key": "$5000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": 22,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 5000"
+   },
+   {
+    "name": "price_red_g3sg1",
+    "text_key": "$5000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": 22,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 5000"
+   },
+   {
+    "name": "buy_scar20",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Barrett .50cal",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 22,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:scar20;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "bonus_scar20",
+    "text_key": "FMJ, Sleight of Hand, Quickdraw, +5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": 22,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_scar20",
+    "text_key": "$5000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": 22,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 5000"
+   },
+   {
+    "name": "price_red_scar20",
+    "text_key": "$5000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": 22,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 5000"
+   },
+   {
+    "name": "back",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "BACK",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 128,
+     "w": 160,
+     "h": 24,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "name": "bd_buy_heavy",
+  "rect": {
+   "x": 0,
+   "y": 0,
+   "w": 640,
+   "h": 480,
+   "horz_align": 4,
+   "vert_align": 4
+  },
+  "handlers": {
+   "open": [
+    {
+     "Script": "focusFirst;"
+    }
+   ],
+   "esc": [
+    {
+     "Script": "close self;"
+    }
+   ]
+  },
+  "items": [
+   {
+    "name": "bg_dim",
+    "background": "white",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.62
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_clouds",
+    "background": "mw2_main_cloud_overlay",
+    "rect": {
+     "x": -107,
+     "y": 0,
+     "w": 854,
+     "h": 480,
+     "horz_align": 0,
+     "vert_align": 0
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.14
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_glow",
+    "background": "mockup_bg_glow",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.35
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "panel",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 370,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.55
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_top",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_bottom",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": 185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "eyebrow",
+    "text_key": "BOMB DEFUSAL",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -192,
+     "w": 200,
+     "h": 14,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.5
+    ],
+    "font_enum": 3,
+    "text_scale": 0.22,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "title_rule",
+    "background": "white",
+    "rect": {
+     "x": -258,
+     "y": -146,
+     "w": 516,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.22
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "title",
+    "text_key": "HEAVY",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -176,
+     "w": 300,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.55,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "money",
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": 40,
+     "y": -178,
+     "w": 218,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.5,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "text_exp": "s:24 op 5 op 38 s:75695f62645f6d6f6e6579 op 1"
+   },
+   {
+    "name": "hint",
+    "text_key": "Buy during freeze time and the first seconds of the round, near your spawn.  ESC closes.",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 158,
+     "w": 516,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.55
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "col_bonus",
+    "text_key": "BONUS WHILE HELD",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -150,
+     "w": 200,
+     "h": 18,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.45
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "buy_nova",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "SPAS-12",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -128,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:nova;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_nova",
+    "text_key": "Steady Aim, +5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -128,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_nova",
+    "text_key": "$1050",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1050"
+   },
+   {
+    "name": "price_red_nova",
+    "text_key": "$1050",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1050"
+   },
+   {
+    "name": "buy_xm1014",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "M1014",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -103,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:xm1014;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_xm1014",
+    "text_key": "Grip, Steady Aim, +5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -103,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_xm1014",
+    "text_key": "$2000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 2000"
+   },
+   {
+    "name": "price_red_xm1014",
+    "text_key": "$2000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 2000"
+   },
+   {
+    "name": "buy_sawedoff",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Ranger",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -78,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:sawedoff;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "bonus_sawedoff",
+    "text_key": "Steady Aim, +5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -78,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "price_sawedoff",
+    "text_key": "$1100",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1100"
+   },
+   {
+    "name": "price_red_sawedoff",
+    "text_key": "$1100",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1100"
+   },
+   {
+    "name": "buy_mag7",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Striker",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -78,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:mag7;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "bonus_mag7",
+    "text_key": "Steady Aim, +5% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -78,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_mag7",
+    "text_key": "$1300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1300"
+   },
+   {
+    "name": "price_red_mag7",
+    "text_key": "$1300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1300"
+   },
+   {
+    "name": "buy_m249",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "MG4",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -53,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:m249;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_m249",
+    "text_key": "FMJ, Grip, Sleight of Hand, +17% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -53,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_m249",
+    "text_key": "$5200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 5200"
+   },
+   {
+    "name": "price_red_m249",
+    "text_key": "$5200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 5200"
+   },
+   {
+    "name": "buy_negev",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "RPD",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -28,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:negev;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "bonus_negev",
+    "text_key": "Grip, Steady Aim, +1% dmg",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -28,
+     "w": 200,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.95,
+     0.8,
+     0.4,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "price_negev",
+    "text_key": "$1700",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1700"
+   },
+   {
+    "name": "price_red_negev",
+    "text_key": "$1700",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1700"
+   },
+   {
+    "name": "back",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "BACK",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 128,
+     "w": 160,
+     "h": 24,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "name": "bd_buy_grenades",
+  "rect": {
+   "x": 0,
+   "y": 0,
+   "w": 640,
+   "h": 480,
+   "horz_align": 4,
+   "vert_align": 4
+  },
+  "handlers": {
+   "open": [
+    {
+     "Script": "focusFirst;"
+    }
+   ],
+   "esc": [
+    {
+     "Script": "close self;"
+    }
+   ]
+  },
+  "items": [
+   {
+    "name": "bg_dim",
+    "background": "white",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.62
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_clouds",
+    "background": "mw2_main_cloud_overlay",
+    "rect": {
+     "x": -107,
+     "y": 0,
+     "w": 854,
+     "h": 480,
+     "horz_align": 0,
+     "vert_align": 0
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.14
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_glow",
+    "background": "mockup_bg_glow",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.35
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "panel",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 370,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.55
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_top",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_bottom",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": 185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "eyebrow",
+    "text_key": "BOMB DEFUSAL",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -192,
+     "w": 200,
+     "h": 14,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.5
+    ],
+    "font_enum": 3,
+    "text_scale": 0.22,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "title_rule",
+    "background": "white",
+    "rect": {
+     "x": -258,
+     "y": -146,
+     "w": 516,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.22
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "title",
+    "text_key": "GRENADES",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -176,
+     "w": 300,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.55,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "money",
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": 40,
+     "y": -178,
+     "w": 218,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.5,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "text_exp": "s:24 op 5 op 38 s:75695f62645f6d6f6e6579 op 1"
+   },
+   {
+    "name": "hint",
+    "text_key": "Buy during freeze time and the first seconds of the round, near your spawn.  ESC closes.",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 158,
+     "w": 516,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.55
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "col_bonus",
+    "text_key": "BONUS WHILE HELD",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -150,
+     "w": 200,
+     "h": 18,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.45
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "buy_hegrenade",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Frag Grenade",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -128,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:hegrenade;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "price_hegrenade",
+    "text_key": "$300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 300"
+   },
+   {
+    "name": "price_red_hegrenade",
+    "text_key": "$300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 300"
+   },
+   {
+    "name": "buy_flashbang",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Flash Grenade",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -103,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:flashbang;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "price_flashbang",
+    "text_key": "$200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 200"
+   },
+   {
+    "name": "price_red_flashbang",
+    "text_key": "$200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 200"
+   },
+   {
+    "name": "buy_smokegrenade",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Smoke Grenade",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -78,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:smokegrenade;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "price_smokegrenade",
+    "text_key": "$300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 300"
+   },
+   {
+    "name": "price_red_smokegrenade",
+    "text_key": "$300",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 300"
+   },
+   {
+    "name": "buy_molotov",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Semtex",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -53,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:molotov;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0"
+   },
+   {
+    "name": "price_molotov",
+    "text_key": "$400",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 400"
+   },
+   {
+    "name": "price_red_molotov",
+    "text_key": "$400",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 0 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 400"
+   },
+   {
+    "name": "buy_incgrenade",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Semtex",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -53,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:incgrenade;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_incgrenade",
+    "text_key": "$500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 500"
+   },
+   {
+    "name": "price_red_incgrenade",
+    "text_key": "$500",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 500"
+   },
+   {
+    "name": "buy_decoy",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Stun Grenade",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -28,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:decoy;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "price_decoy",
+    "text_key": "$50",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 50"
+   },
+   {
+    "name": "price_red_decoy",
+    "text_key": "$50",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -28,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 50"
+   },
+   {
+    "name": "back",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "BACK",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 128,
+     "w": 160,
+     "h": 24,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "name": "bd_buy_gear",
+  "rect": {
+   "x": 0,
+   "y": 0,
+   "w": 640,
+   "h": 480,
+   "horz_align": 4,
+   "vert_align": 4
+  },
+  "handlers": {
+   "open": [
+    {
+     "Script": "focusFirst;"
+    }
+   ],
+   "esc": [
+    {
+     "Script": "close self;"
+    }
+   ]
+  },
+  "items": [
+   {
+    "name": "bg_dim",
+    "background": "white",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.62
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_clouds",
+    "background": "mw2_main_cloud_overlay",
+    "rect": {
+     "x": -107,
+     "y": 0,
+     "w": 854,
+     "h": 480,
+     "horz_align": 0,
+     "vert_align": 0
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.14
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_glow",
+    "background": "mockup_bg_glow",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.35
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "panel",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 370,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.55
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_top",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": -185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_bottom",
+    "background": "white",
+    "rect": {
+     "x": -270,
+     "y": 185,
+     "w": 540,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "eyebrow",
+    "text_key": "BOMB DEFUSAL",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -192,
+     "w": 200,
+     "h": 14,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.5
+    ],
+    "font_enum": 3,
+    "text_scale": 0.22,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "title_rule",
+    "background": "white",
+    "rect": {
+     "x": -258,
+     "y": -146,
+     "w": 516,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.22
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "title",
+    "text_key": "EQUIPMENT",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -176,
+     "w": 300,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.55,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "money",
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": 40,
+     "y": -178,
+     "w": 218,
+     "h": 28,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.5,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "text_exp": "s:24 op 5 op 38 s:75695f62645f6d6f6e6579 op 1"
+   },
+   {
+    "name": "hint",
+    "text_key": "Buy during freeze time and the first seconds of the round, near your spawn.  ESC closes.",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 158,
+     "w": 516,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.55
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "col_bonus",
+    "text_key": "BONUS WHILE HELD",
+    "text_literal": true,
+    "rect": {
+     "x": -40,
+     "y": -150,
+     "w": 200,
+     "h": 18,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.45
+    ],
+    "font_enum": 3,
+    "text_scale": 0.24,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "buy_vest",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Kevlar Vest",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -128,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:vest;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "price_vest",
+    "text_key": "$650",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 650"
+   },
+   {
+    "name": "price_red_vest",
+    "text_key": "$650",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -128,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 650"
+   },
+   {
+    "name": "buy_vesthelm",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Kevlar + Helmet",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -103,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:vesthelm;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "price_vesthelm",
+    "text_key": "$1000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 1000"
+   },
+   {
+    "name": "price_red_vesthelm",
+    "text_key": "$1000",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -103,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 1000"
+   },
+   {
+    "name": "buy_taser",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Throwing Knife",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -78,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:taser;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "price_taser",
+    "text_key": "$200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 11 200"
+   },
+   {
+    "name": "price_red_taser",
+    "text_key": "$200",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -78,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6d6f6e6579 op 1 op 8 200"
+   },
+   {
+    "name": "buy_defuser",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "Defuse Kit",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": -53,
+     "w": 516,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "scriptMenuResponse bd:defuser;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    },
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1"
+   },
+   {
+    "name": "price_defuser",
+    "text_key": "$400",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.55,
+     1,
+     0.45,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 11 400"
+   },
+   {
+    "name": "price_red_defuser",
+    "text_key": "$400",
+    "text_literal": true,
+    "rect": {
+     "x": 158,
+     "y": -53,
+     "w": 100,
+     "h": 22,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.3,
+     0.25,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 10,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "vis_exp": "op 35 s:75695f62645f6374 op 1 op 12 1 op 14 op 35 s:75695f62645f6d6f6e6579 op 1 op 8 400"
+   },
+   {
+    "name": "back",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "BACK",
+    "text_literal": true,
+    "rect": {
+     "x": -258,
+     "y": 128,
+     "w": 160,
+     "h": 24,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.375,
+    "text_align_mode": 8,
+    "text_align_x": 8,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; close self; open bd_buy;"
+      }
+     ],
+     "focus": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "leave_focus": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "name": "bd_team",
+  "rect": {
+   "x": 0,
+   "y": 0,
+   "w": 640,
+   "h": 480,
+   "horz_align": 4,
+   "vert_align": 4
+  },
+  "handlers": {},
+  "items": [
+   {
+    "name": "bg_dim",
+    "background": "white",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.62
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_clouds",
+    "background": "mw2_main_cloud_overlay",
+    "rect": {
+     "x": -107,
+     "y": 0,
+     "w": 854,
+     "h": 480,
+     "horz_align": 0,
+     "vert_align": 0
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.14
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "bg_glow",
+    "background": "mockup_bg_glow",
+    "rect": {
+     "x": 0,
+     "y": 0,
+     "w": 640,
+     "h": 480,
+     "horz_align": 4,
+     "vert_align": 4
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.35
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "panel",
+    "background": "white",
+    "rect": {
+     "x": -260,
+     "y": -170,
+     "w": 520,
+     "h": 345,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0,
+     0,
+     0,
+     0.55
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_top",
+    "background": "white",
+    "rect": {
+     "x": -260,
+     "y": -170,
+     "w": 520,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "rule_bottom",
+    "background": "white",
+    "rect": {
+     "x": -260,
+     "y": 175,
+     "w": 520,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.3
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "eyebrow",
+    "text_key": "BOMB DEFUSAL",
+    "text_literal": true,
+    "rect": {
+     "x": -248,
+     "y": -177,
+     "w": 300,
+     "h": 14,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.5
+    ],
+    "font_enum": 3,
+    "text_scale": 0.22,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "title",
+    "text_key": "CHOOSE TEAM",
+    "text_literal": true,
+    "rect": {
+     "x": -248,
+     "y": -166,
+     "w": 300,
+     "h": 30,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.6,
+    "text_align_mode": 8,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "title_rule",
+    "background": "white",
+    "rect": {
+     "x": -248,
+     "y": -128,
+     "w": 496,
+     "h": 0.5,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.22
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "team_ct",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": -248,
+     "y": -110,
+     "w": 230,
+     "h": 230,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0.45
+    ],
+    "font_enum": 3,
+    "text_scale": 0.4,
+    "text_align_mode": 9,
+    "text_align_x": 0,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; scriptMenuResponse bd:team_ct; close self;"
+      }
+     ],
+     "mouse_enter": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 0.45 0.7 1 0.28;"
+      }
+     ],
+     "mouse_exit": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0.45;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "ct_stripe",
+    "background": "white",
+    "rect": {
+     "x": -248,
+     "y": -110,
+     "w": 230,
+     "h": 2,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.45,
+     0.7,
+     1,
+     1
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "ct_logo",
+    "background": "",
+    "rect": {
+     "x": -189.0,
+     "y": -98,
+     "w": 112,
+     "h": 112,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "static_flags": 1048576,
+    "material_exp": "op 38 s:75695f62645f63745f69636f6e op 1"
+   },
+   {
+    "name": "ct_faction",
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": -248,
+     "y": 18,
+     "w": 230,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.36,
+    "text_align_mode": 9,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "text_exp": "op 38 s:75695f62645f63745f66616374696f6e op 1"
+   },
+   {
+    "name": "ct_label",
+    "text_key": "COUNTER-TERRORISTS",
+    "text_literal": true,
+    "rect": {
+     "x": -248,
+     "y": 38,
+     "w": 230,
+     "h": 18,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     0.45,
+     0.7,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.26,
+    "text_align_mode": 9,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "ct_role",
+    "text_key": "DEFEND THE BOMB SITES",
+    "text_literal": true,
+    "rect": {
+     "x": -248,
+     "y": 56,
+     "w": 230,
+     "h": 16,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.55
+    ],
+    "font_enum": 3,
+    "text_scale": 0.2,
+    "text_align_mode": 9,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "ct_join",
+    "text_key": "JOIN",
+    "text_literal": true,
+    "rect": {
+     "x": -248,
+     "y": 86,
+     "w": 230,
+     "h": 24,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.4,
+    "text_align_mode": 9,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "team_t",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": 18,
+     "y": -110,
+     "w": 230,
+     "h": 230,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0.45
+    ],
+    "font_enum": 3,
+    "text_scale": 0.4,
+    "text_align_mode": 9,
+    "text_align_x": 0,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; scriptMenuResponse bd:team_t; close self;"
+      }
+     ],
+     "mouse_enter": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 0.62 0.3 0.28;"
+      }
+     ],
+     "mouse_exit": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0.45;"
+      }
+     ]
+    }
+   },
+   {
+    "name": "t_stripe",
+    "background": "white",
+    "rect": {
+     "x": 18,
+     "y": -110,
+     "w": 230,
+     "h": 2,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.62,
+     0.3,
+     1
+    ],
+    "static_flags": 1048576
+   },
+   {
+    "name": "t_logo",
+    "background": "",
+    "rect": {
+     "x": 77.0,
+     "y": -98,
+     "w": 112,
+     "h": 112,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "static_flags": 1048576,
+    "material_exp": "op 38 s:75695f62645f745f69636f6e op 1"
+   },
+   {
+    "name": "t_faction",
+    "text_key": "",
+    "text_literal": true,
+    "rect": {
+     "x": 18,
+     "y": 18,
+     "w": 230,
+     "h": 20,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.36,
+    "text_align_mode": 9,
+    "text_align_x": 6,
+    "static_flags": 1048576,
+    "text_exp": "op 38 s:75695f62645f745f66616374696f6e op 1"
+   },
+   {
+    "name": "t_label",
+    "text_key": "TERRORISTS",
+    "text_literal": true,
+    "rect": {
+     "x": 18,
+     "y": 38,
+     "w": 230,
+     "h": 18,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     0.62,
+     0.3,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.26,
+    "text_align_mode": 9,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "t_role",
+    "text_key": "PLANT THE BOMB",
+    "text_literal": true,
+    "rect": {
+     "x": 18,
+     "y": 56,
+     "w": 230,
+     "h": 16,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.55
+    ],
+    "font_enum": 3,
+    "text_scale": 0.2,
+    "text_align_mode": 9,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "t_join",
+    "text_key": "JOIN",
+    "text_literal": true,
+    "rect": {
+     "x": 18,
+     "y": 86,
+     "w": 230,
+     "h": 24,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "fore_color": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "font_enum": 3,
+    "text_scale": 0.4,
+    "text_align_mode": 9,
+    "text_align_x": 6,
+    "static_flags": 1048576
+   },
+   {
+    "name": "team_auto",
+    "item_type": 1,
+    "style": 1,
+    "text_key": "AUTO-SELECT",
+    "text_literal": true,
+    "rect": {
+     "x": -120,
+     "y": 134,
+     "w": 240,
+     "h": 26,
+     "horz_align": 2,
+     "vert_align": 2
+    },
+    "background": "white",
+    "fore_color": [
+     1,
+     1,
+     1,
+     0.85
+    ],
+    "back_color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "font_enum": 3,
+    "text_scale": 0.36,
+    "text_align_mode": 9,
+    "text_align_x": 0,
+    "handlers": {
+     "action": [
+      {
+       "Script": "play mouse_click; scriptMenuResponse bd:team_auto; close self;"
+      }
+     ],
+     "mouse_enter": [
+      {
+       "Script": "play mouse_over; setItemColor self backcolor 1 1 1 0.4;"
+      }
+     ],
+     "mouse_exit": [
+      {
+       "Script": "setItemColor self backcolor 0 0 0 0;"
+      }
+     ]
+    }
+   }
+  ]
+ }
+]

@@ -163,23 +163,35 @@ fn fill_bots_from_rules(
         return;
     };
     roster.rules_filled = true;
-    let Some(rules) = rules else {
-        return;
-    };
     let count = |dvar: &str| {
         rules
-            .0
-            .iter()
-            .find(|(name, _)| name == dvar)
+            .as_ref()
+            .and_then(|rules| rules.0.iter().find(|(name, _)| name == dvar))
             .and_then(|(_, value)| value.trim().parse::<u32>().ok())
             .unwrap_or(0)
     };
+    let kind = world.0.game_mode_kind();
     let enemies = count(sim::ENEMY_BOTS_DVAR);
-    let friends = if world.0.game_mode_kind() == gamemode_iw4::GameModeKind::FreeForAll {
+    let friends = if kind == gamemode_iw4::GameModeKind::FreeForAll {
         0
     } else {
         count(sim::FRIENDLY_BOTS_DVAR)
     };
+    // Competitive Bomb Defusal is played five against five, Casual nine
+    // against nine; an unset lobby fills it. These bots take the
+    // auto-assigned team: a requested side arrives after the first spawn,
+    // and the switch would kill them for the rest of the round.
+    if kind.is_bomb_defusal() && enemies == 0 && friends == 0 {
+        use gamemode_iw4::bomb_defusal as bd;
+        let count = if kind == gamemode_iw4::GameModeKind::BombDefusalCasual {
+            bd::CASUAL_ENEMY_BOTS + bd::CASUAL_FRIENDLY_BOTS
+        } else {
+            bd::DEFAULT_ENEMY_BOTS + bd::DEFAULT_FRIENDLY_BOTS
+        };
+        queue.push(count);
+        diag::info!(Sim, "bots: bomb defusal adds {count} auto-assigned bots");
+        return;
+    }
     queue.push_side(enemies, crate::BotSide::Enemy);
     queue.push_side(friends, crate::BotSide::Friendly);
     if enemies > 0 || friends > 0 {
@@ -440,6 +452,24 @@ fn apply_bot_tp(
     }
 }
 
+const APPROACH_REFRESH_TICKS: u32 = 10;
+
+/// Below this an enemy has clearly been hit.
+const HURT_ENEMY_HP: i32 = 70;
+
+/// Confidence marking a contact learned from a teammate's death.
+pub(crate) const TRADE_CONFIDENCE: f32 = 0.9;
+
+fn bots_contact(id: sim::ClientId, origin: [f32; 3], tick: u32, confidence: f32) -> crate::observation::Contact {
+    crate::observation::Contact {
+        id,
+        origin,
+        source: crate::observation::KnowledgeSource::LastSeen,
+        seen_tick: tick,
+        confidence,
+    }
+}
+
 #[derive(SystemParam)]
 struct ThinkBots<'w> {
     clock: Res<'w, AuthorityClock>,
@@ -469,6 +499,41 @@ fn think_bots(mut p: ThinkBots) {
     }
 
     let snapshot = p.world.0.snapshot(Tick(p.clock.tick.saturating_sub(1)));
+    {
+        let world = &p.world.0;
+        p.roster.smoke.update(&snapshot, |weapon| {
+            world.weapon_script_name(weapon).starts_with("smoke_grenade")
+        });
+    }
+    let smoke = p.roster.smoke.clouds(snapshot.tick.0);
+    // Where each team starts: noted while everyone is frozen for the buy.
+    {
+        let mut sums: std::collections::HashMap<i32, ([f32; 3], f32)> = Default::default();
+        for (id, ps) in &snapshot.players {
+            let Some(meta) = snapshot.meta.for_client(*id) else {
+                continue;
+            };
+            if meta.lifecycle != ClientLifecycle::Alive || !meta.controls.frozen {
+                continue;
+            }
+            let entry = sums.entry(meta.client_state_team).or_insert(([0.0; 3], 0.0));
+            for axis in 0..3 {
+                entry.0[axis] += ps.origin[axis];
+            }
+            entry.1 += 1.0;
+        }
+        for (team, (sum, n)) in sums {
+            p.roster.threat.note_spawn(team, sum.map(|v| v / n));
+        }
+        p.roster.threat.refresh(&p.nav.graph);
+    }
+    let threat = std::mem::take(&mut p.roster.threat);
+    let mut approach = std::mem::take(&mut p.roster.approach);
+    let mut rotations = std::mem::take(&mut p.roster.rotations);
+    // Last tick's sightings are this tick's callouts; this tick's are
+    // gathered as the bots look.
+    let callouts = std::mem::take(&mut p.roster.callouts);
+    let mut heard_now: Vec<(i32, sim::ClientId, [f32; 3], u32)> = Vec::new();
     let fires = p.fire.drain();
     let mut budget = TraceBudget::new(TRACE_QUOTA);
     let mut astar = ASTAR_QUOTA;
@@ -481,6 +546,16 @@ fn think_bots(mut p: ThinkBots) {
         let Some(meta) = snapshot.meta.for_client(bot.id) else {
             continue;
         };
+        // Bomb Defusal marks its bots by their buy request, and moves one to
+        // make room when a player picks a full side: send it as soon as the
+        // bot is in, not at its first spawn, or a player picking a side
+        // straight after joining finds no bot to move. The script holds the
+        // buy until the bot spawns.
+        let bomb_defusal = p.world.0.game_mode_kind().is_bomb_defusal();
+        if bomb_defusal && !bot.announced {
+            bot.announced = true;
+            push_botbuy(&mut p.actions, &mut p.request_ids, bot.id);
+        }
         if meta.lifecycle != ClientLifecycle::Alive {
             if let Some(brain) = bot.brain.as_mut() {
                 brain.cancel_navigation();
@@ -502,6 +577,9 @@ fn think_bots(mut p: ThinkBots) {
                     bot.id.0
                 ),
             }
+            if bomb_defusal {
+                push_botbuy(&mut p.actions, &mut p.request_ids, bot.id);
+            }
         }
         let mut cmd = if p.hold.0 || bot.brain.is_none() {
             let Some((_, ps)) = snapshot.players.iter().find(|(id, _)| *id == bot.id) else {
@@ -518,10 +596,59 @@ fn think_bots(mut p: ThinkBots) {
             }
         } else if let Some(brain) = bot.brain.as_mut() {
             let mut queried = Budgeted::new(&mut p.world.0, &mut budget);
-            let Some(obs) =
-                sensor::observe_focused(&snapshot, bot.id, &mut queried, brain.focus_target())
+            let Some(mut obs) =
+                sensor::observe_focused(
+                    &snapshot,
+                    bot.id,
+                    &mut queried,
+                    brain.focus_target(),
+                    &smoke,
+                )
             else {
                 continue;
+            };
+            let team = obs.self_state.team;
+            for contact in &obs.seen {
+                heard_now.push((team, contact.id, contact.origin, obs.tick));
+            }
+            sensor::hear_callouts(&mut obs, &callouts);
+            sensor::rotate_on_call(&mut obs, &callouts, &mut rotations);
+            obs.hurt = obs
+                .seen
+                .iter()
+                .filter(|c| {
+                    snapshot
+                        .players
+                        .iter()
+                        .any(|(id, ps)| *id == c.id && ps.health > 0 && ps.health < HURT_ENEMY_HP)
+                })
+                .map(|c| c.id)
+                .collect();
+            // The killfeed and the dying teammate's last words: where the
+            // killer is.
+            if let Some((killer, at)) = obs.trade
+                && !obs.seen.iter().any(|c| c.id == killer)
+            {
+                obs.heard.retain(|c| c.id != killer);
+                obs.heard.push(bots_contact(killer, at, obs.tick, TRADE_CONFIDENCE));
+            }
+            // Where an enemy would come from, refreshed every half second.
+            let enemy_team = match obs.self_state.team {
+                1 => Some(2),
+                2 => Some(1),
+                _ => None,
+            };
+            let tick_now = snapshot.tick.0;
+            let cached = approach.get(&bot.id).copied();
+            obs.enemy_approach = match cached {
+                Some((at, point)) if tick_now.saturating_sub(at) < APPROACH_REFRESH_TICKS => point,
+                _ => {
+                    let point = enemy_team.and_then(|team| {
+                        threat.approach(&p.nav.graph, team, obs.self_state.origin)
+                    });
+                    approach.insert(bot.id, (tick_now, point));
+                    point
+                }
             };
             let started = std::time::Instant::now();
             let mut cmd = brain.drive_nav(
@@ -545,6 +672,18 @@ fn think_bots(mut p: ThinkBots) {
         }
         p.cmds.push(bot.id, None, cmd, None);
     }
+    p.roster.threat = threat;
+    p.roster.approach = approach;
+    p.roster.rotations = rotations;
+    // Keep a sighting a few seconds so a callout survives the caller losing
+    // sight for a moment.
+    let tick_now = snapshot.tick.0;
+    heard_now.extend(
+        callouts
+            .into_iter()
+            .filter(|(_, _, _, at)| tick_now.saturating_sub(*at) < sensor::CALLOUT_KEEP_TICKS),
+    );
+    p.roster.callouts = heard_now;
     if count == 0 {
         return;
     }
@@ -750,4 +889,29 @@ fn aim_viewangles(from: [f32; 3], target: [f32; 3]) -> [f32; 3] {
     }
     angles[0] = angles[0].clamp(-VIEW_PITCH_DOWN, VIEW_PITCH_DOWN);
     angles
+}
+
+/// Bomb Defusal's bot buy request, which also marks the client as a bot.
+fn push_botbuy(
+    actions: &mut ClientActionInbox,
+    request_ids: &mut net::ActionRequestIds,
+    bot: sim::ClientId,
+) {
+    let (Some(menu), Some(response)) = (
+        sim::menu_response_field(gamemode_iw4::bomb_defusal::BUY_MENU),
+        sim::menu_response_field(gamemode_iw4::bomb_defusal::BOTBUY_RESPONSE),
+    ) else {
+        return;
+    };
+    let request_id = request_ids.allocate();
+    if let Err(error) = actions.push(
+        bot,
+        ClientAction::MenuResponse {
+            request_id,
+            menu,
+            response,
+        },
+    ) {
+        diag::warn!(Sim, "bots: client {} buy request not queued — {error}", bot.0);
+    }
 }

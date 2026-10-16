@@ -791,6 +791,13 @@ fn grab_projectile(world: &mut FrameWorld, walker: ClientId, number: i32, tick: 
 }
 
 fn selected_item(world: &FrameWorld, walker: ClientId, ps: &PlayerState) -> Option<UseItem> {
+    // Planting or defusing outranks picking up a gun.
+    if world
+        .client_meta(walker)
+        .is_some_and(|meta| meta.use_trigger_reach)
+    {
+        return None;
+    }
     if !walker_can_touch(world, walker, ps)
         || ps.pm_flags & (4 | 0x4000) != 0
         || (16..=20).contains(&ps.weaponstate_primary)

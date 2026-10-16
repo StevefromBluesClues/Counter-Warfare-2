@@ -54,7 +54,7 @@ impl MenuHost<'_> {
             "g_gametype" | "ui_gametype" => self
                 .world
                 .kind
-                .map(|kind| kind.token().to_owned())
+                .map(|kind| kind.script_tokens()[0].to_owned())
                 .unwrap_or_default(),
             "g_teamicon_allies" => self.team_key(|t| t.allies.as_ref()),
             "g_teamicon_axis" => self.team_key(|t| t.axis.as_ref()),

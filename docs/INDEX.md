@@ -27,6 +27,7 @@ game. Keep them this short: nobody opens a long file twice.
 | [`ENTITIES.md`](ENTITIES.md) | the `TickInput → sim::step → Snapshot` funnel, the `entity_iw4` taxonomy (`EntityState` / `Centity` / `ET_*` / trajectories), what sits where in `sim` | gameplay, networking, replay |
 | [`SIM-STEP.md`](SIM-STEP.md) | `sim::step`: one `TickInput` → `Snapshot` funnel for authority, prediction and replay; `StepReason`; what makes a step deterministic | touching the step, prediction or replay |
 | [`SKILL.md`](SKILL.md) | local Elo ratings, account persistence and migration | changing skill updates or account synchronization |
+| [`BOMB-DEFUSAL.md`](BOMB-DEFUSAL.md) | the CS2-economy mode: SD plus the `iw4l/bomb_defusal` overlay, buy menu, money rules, dvars | playing or changing Bomb Defusal |
 | [`GSC-RUNTIME.md`](GSC-RUNTIME.md) | GSC → executable IR → Bevy runtime; args, arrays and tables still share one `Runtime` | implementing gameplay or script execution |
 | [`POSTFX.md`](POSTFX.md) | authored map-family film, bloom and highlight profiles; remaining effects | comparing game-family presentation |
 | [`GSC-POSTFX.md`](GSC-POSTFX.md) | script vision, color correction, blur, DoF and bloom | authoring or debugging GSC post effects |

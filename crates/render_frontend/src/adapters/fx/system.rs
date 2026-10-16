@@ -2092,6 +2092,7 @@ fn publish_weapon_fire(
     };
     let gate = PlayerDrawGate {
         eyes_entity_num: eyes,
+        follow_entity_num: PlayerDrawGate::follow_entity_num(presented.player(local.0)),
         other_flags: player.map_or(0, |ps| ps.other_flags),
         rendering_third_person: crate::adapters::anim::third_person::presented_is_third_person(
             &presented,
@@ -2222,6 +2223,7 @@ fn drain_weapon_fire_fx(
         };
         let gate = PlayerDrawGate {
             eyes_entity_num: eyes,
+            follow_entity_num: PlayerDrawGate::follow_entity_num(presented.player(local.0)),
             other_flags: presented
                 .player(local.0)
                 .map(|ps| ps.other_flags)
@@ -3359,6 +3361,7 @@ fn melee_blood(
     };
     let gate = PlayerDrawGate {
         eyes_entity_num: eyes,
+        follow_entity_num: PlayerDrawGate::follow_entity_num(presented.player(local.0)),
         other_flags: presented
             .player(local.0)
             .map(|ps| ps.other_flags)

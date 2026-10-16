@@ -341,6 +341,18 @@ impl Runner<'_, '_> {
 
     pub(crate) fn open(&mut self, name: &str) {
         let catalog = self.catalog;
+        // Bomb Defusal has no classes: every way into the stock class or team
+        // menus (the scripts, the pause menu's "change team", a key) lands on
+        // its own Counter-Strike style team pick.
+        let lower = name.to_ascii_lowercase();
+        let name = if self.world.kind.is_some_and(|kind| kind.is_bomb_defusal())
+            && (lower.starts_with("changeclass") || lower.starts_with("team_marinesopfor"))
+            && catalog.get(super::BD_TEAM_MENU).is_some()
+        {
+            super::BD_TEAM_MENU
+        } else {
+            name
+        };
         let Some(def) = catalog.get(name) else {
             diag::warn!(Ui, "menu open: `{name}` is not loaded");
             return;

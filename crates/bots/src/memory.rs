@@ -1,6 +1,8 @@
 use crate::observation::{BotEvent, BotObservation, Contact, KnowledgeSource, Visibility};
 
-const MEMORY_TTL_TICKS: u32 = 80;
+/// Where an enemy was is remembered this long (15 s); whether it is still worth
+/// pushing or watching is the controller's call.
+const MEMORY_TTL_TICKS: u32 = 300;
 /// How long a contact stays current across ticks where perception never got to
 /// it. A completed negative observation ends it at once; this bound only covers
 /// "not evaluated", and it never refreshes the remembered position.
@@ -31,6 +33,17 @@ impl Memory {
             }
             row.source = KnowledgeSource::LastSeen;
             events.push(BotEvent::LostSight { id: row.id });
+        }
+        // A sound refreshes where an unseen enemy is thought to be.
+        for heard in &obs.heard {
+            if obs.seen.iter().any(|s| s.id == heard.id) {
+                continue;
+            }
+            match self.contacts.iter_mut().find(|c| c.id == heard.id) {
+                Some(row) if row.source == KnowledgeSource::CurrentlySeen => {}
+                Some(row) => *row = *heard,
+                None => self.contacts.push(*heard),
+            }
         }
         for seen in &obs.seen {
             if let Some(row) = self.contacts.iter_mut().find(|c| c.id == seen.id) {

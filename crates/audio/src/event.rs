@@ -101,6 +101,9 @@ pub(crate) struct EventContext {
     pub timeline: u64,
     pub tick: u32,
     pub owner_tick: Option<u32>,
+    /// Playing back a killcam: the same shots a second time, which must be
+    /// heard again rather than taken for repeats of the live ones.
+    pub replay: bool,
 }
 
 impl EventContext {
@@ -153,7 +156,9 @@ impl EventJournal {
         let same_timeline = self
             .context
             .zip(context)
-            .is_some_and(|(old, new)| old.world == new.world && old.timeline == new.timeline);
+            .is_some_and(|(old, new)| {
+                old.world == new.world && old.timeline == new.timeline && old.replay == new.replay
+            });
         if !same_timeline {
             self.accepted.clear();
             self.fire.clear();

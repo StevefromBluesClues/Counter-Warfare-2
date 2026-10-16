@@ -1053,6 +1053,39 @@ pub fn sample_client_input(
             };
         }
     }
+    let buttons = (
+        actions.client.kb.attack.active,
+        actions.client.kb.speed.active,
+        actions.client.using_ads,
+    );
+    let previous = std::mem::replace(&mut actions.spectate_buttons, buttons);
+    let following = crate::PlayerDrawGate::follow_entity_num(presented.player(local.0))
+        .is_some_and(|client| client != local.0.0 as i32);
+    let cycle = if !following {
+        None
+    } else if buttons.0 && !previous.0 {
+        Some(sim::SPECTATE_NEXT)
+    } else if (buttons.1 && !previous.1) || buttons.2 != previous.2 {
+        Some(sim::SPECTATE_PREVIOUS)
+    } else {
+        None
+    };
+    if let (Some(response), Some(inbox), Some(ids)) =
+        (cycle, action_inbox.as_mut(), request_ids.as_mut())
+        && let (Some(menu), Some(response)) = (
+            sim::menu_response_field(sim::SPECTATE_MENU),
+            sim::menu_response_field(response),
+        )
+    {
+        let action = sim::ClientAction::MenuResponse {
+            request_id: ids.allocate(),
+            menu,
+            response,
+        };
+        if let Err(error) = inbox.push(local.0, action) {
+            diag::warn!(Net, "spectate: not queued — {error}");
+        }
+    }
     let slots = std::mem::take(&mut actions.client.action_slots);
     if let (Some(inbox), Some(ids)) = (action_inbox.as_mut(), request_ids.as_mut()) {
         for &slot in &slots {
@@ -1797,6 +1830,24 @@ pub fn publish_presented(
             predicted = seat;
         }
     }
+    // A live spectator seat follows the target's interpolated pose, on the same
+    // timeline as every other player, instead of predicting the viewer.
+    let follow = crate::PlayerDrawGate::follow_entity_num(snapshot_local)
+        .and_then(|client| u32::try_from(client).ok())
+        .filter(|client| *client != local.0.0)
+        .map(sim::ClientId);
+    if let (Some(target), Some(seat)) = (follow, snapshot_local)
+        && let Some(pose) = remote_poses.get(&target)
+    {
+        let mut followed = *pose;
+        followed.pm_type = seat.pm_type;
+        followed.other_flags = seat.other_flags;
+        followed.kill_cam_entity = seat.kill_cam_entity;
+        followed.kill_cam_look_at_entity = seat.kill_cam_look_at_entity;
+        followed.kill_cam_client_num = seat.kill_cam_client_num;
+        followed.delta_time = 0;
+        predicted = followed;
+    }
     for mut runtime in &mut entities {
         runtime.presented_player = None;
         if runtime.pose_e_type as i32 == entity_iw4::ET_PLAYER
@@ -1843,7 +1894,7 @@ pub fn publish_presented(
             local.0,
         )
     };
-    let view_offset = if archived {
+    let view_offset = if archived || follow.is_some() {
         [0.0; 3]
     } else {
         prediction

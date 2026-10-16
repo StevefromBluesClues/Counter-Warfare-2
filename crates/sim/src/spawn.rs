@@ -77,7 +77,7 @@ pub fn host_game_mode_kind() -> GameModeKind {
         .ok()
         .as_deref()
         .and_then(GameModeKind::parse_ascii_ignore_case)
-        .unwrap_or(GameModeKind::FreeForAll)
+        .unwrap_or(GameModeKind::BombDefusal)
 }
 
 #[derive(bevy_ecs::prelude::Resource, Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -87,7 +87,7 @@ pub struct HostCheats(pub bool);
 pub struct HostGameModeSelection(GameModeKind);
 
 impl HostGameModeSelection {
-    pub const ALL: [Self; 8] = [
+    pub const ALL: [Self; 10] = [
         Self(GameModeKind::FreeForAll),
         Self(GameModeKind::Domination),
         Self(GameModeKind::Demolition),
@@ -96,6 +96,8 @@ impl HostGameModeSelection {
         Self(GameModeKind::CaptureTheFlag),
         Self(GameModeKind::Headquarters),
         Self(GameModeKind::Sabotage),
+        Self(GameModeKind::BombDefusal),
+        Self(GameModeKind::BombDefusalCasual),
     ];
 
     pub fn from_token(token: &str) -> Option<Self> {

@@ -97,14 +97,27 @@ pub struct PlayerDrawGate {
     pub eyes_entity_num: i32,
     pub other_flags: u32,
     pub rendering_third_person: bool,
+    pub follow_entity_num: Option<i32>,
 }
 
 impl PlayerDrawGate {
     pub const SELF_ENTITY_MASK: u32 = other_flags::PLAYER | other_flags::DEAD_KILLCAM_TPV;
 
+    /// A live spectator seat carries the followed player's state with the
+    /// self flags cleared, so the followed body is matched by client instead.
+    pub fn follow_entity_num(ps: Option<&PlayerState>) -> Option<i32> {
+        ps.filter(|ps| {
+            ps.pm_type == playerstate_iw4::PM_TYPE_SPECTATOR
+                && ps.delta_time == 0
+                && ps.kill_cam_client_num >= 0
+        })
+        .map(|ps| ps.kill_cam_client_num)
+    }
+
     pub fn is_player_view(self, number: u16) -> bool {
-        (self.other_flags & Self::SELF_ENTITY_MASK) != 0
-            && i32::from(number) == self.eyes_entity_num
+        let number = i32::from(number);
+        ((self.other_flags & Self::SELF_ENTITY_MASK) != 0 && number == self.eyes_entity_num)
+            || self.follow_entity_num == Some(number)
     }
 
     pub fn skip_self_fpv(self, number: u16) -> bool {
@@ -270,6 +283,12 @@ pub fn player_state_to_entity_state(client: ClientId, ps: &PlayerState) -> Entit
     es.e_flags = ps.e_flags;
     if ps.pm_type >= playerstate_iw4::PM_TYPE_DEAD {
         es.e_flags |= EFLAGS_DEAD;
+    }
+    if matches!(
+        ps.pm_type,
+        playerstate_iw4::PM_TYPE_SPECTATOR | playerstate_iw4::PM_TYPE_INTERMISSION
+    ) {
+        es.e_flags |= eflags::NODRAW;
     }
     es.tr_type = TR_INTERPOLATE;
     es.tr_base = ps.origin;

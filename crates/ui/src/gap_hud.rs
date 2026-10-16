@@ -15,7 +15,7 @@ pub struct GapHud {
 impl Default for GapHud {
     fn default() -> Self {
         Self {
-            title: "iw4l".into(),
+            title: "Counter-Warfare 2".into(),
             body: vec!["waiting for launch status…".into()],
         }
     }

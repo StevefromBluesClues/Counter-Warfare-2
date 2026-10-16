@@ -29,6 +29,8 @@ pub struct ClientActionInput {
     pub client: ClientInput,
     pub(crate) stance_life: Option<u32>,
     pub(crate) stance_event_sequence: i32,
+    /// Fire, aim and the aim toggle as last seen while following a player.
+    pub(crate) spectate_buttons: (bool, bool, bool),
 
     pub scripted_ids: BTreeSet<u32>,
     pub mouse_x: f32,
@@ -71,6 +73,7 @@ pub struct ClientActionInput {
 impl Default for ClientActionInput {
     fn default() -> Self {
         Self {
+            spectate_buttons: (false, false, false),
             client: ClientInput::default(),
             stance_life: None,
             stance_event_sequence: 0,

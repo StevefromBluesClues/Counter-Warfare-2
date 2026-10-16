@@ -78,7 +78,7 @@ pub fn publish_gap_hud(
     body.push(String::new());
     body.push("WASD move, arrows look, escape / close window to quit".into());
 
-    let title = format!("iw4l — {}", identity.zone);
+    let title = format!("Counter-Warfare 2 — {}", identity.zone);
     let report_changed = report.is_changed();
     let identity_changed = identity.is_changed();
     let class_changed = class_store.is_changed();

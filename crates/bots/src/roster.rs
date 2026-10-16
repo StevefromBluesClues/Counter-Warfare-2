@@ -172,6 +172,8 @@ pub struct BotSlot {
     pub class_picked_in: Option<LifeSequence>,
     pub class_picks: u32,
     pub side: Option<BotSide>,
+    /// Bomb Defusal: the script has been told this client is a bot.
+    pub announced: bool,
 }
 
 #[derive(Resource, Debug)]
@@ -180,6 +182,16 @@ pub struct BotRoster {
     pub rules_filled: bool,
     pub next_client: u32,
     pub seed: u64,
+    /// Smoke clouds bots cannot see through.
+    pub smoke: crate::sensor::SmokeTracker,
+    /// Enemies bots saw last tick, by team: what they would call out.
+    pub callouts: Vec<(i32, sim::ClientId, [f32; 3], u32)>,
+    /// The ways in from each team's start, and each bot's last answer
+    /// (tick, point) for where an enemy would arrive from.
+    pub threat: crate::threat::ThreatMap,
+    pub approach: std::collections::HashMap<sim::ClientId, (u32, Option<[f32; 3]>)>,
+    /// Each defending team's current rotation call.
+    pub rotations: std::collections::HashMap<i32, crate::sensor::Rotation>,
 }
 
 impl Default for BotRoster {
@@ -187,6 +199,11 @@ impl Default for BotRoster {
         Self {
             bots: Vec::new(),
             rules_filled: false,
+            smoke: Default::default(),
+            threat: Default::default(),
+            approach: Default::default(),
+            rotations: Default::default(),
+            callouts: Vec::new(),
 
             next_client: 1,
             seed: 0xb075_0001,
@@ -242,6 +259,7 @@ impl BotRoster {
                 joined: false,
                 class_picked_in: None,
                 class_picks: 0,
+                announced: false,
                 side,
             });
             added.push(id);

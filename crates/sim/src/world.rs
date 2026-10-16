@@ -549,6 +549,8 @@ impl SimState {
         self.max_alive_seen = 0;
         self.game_win_winner = None;
         self.pending_final_kill = None;
+        self.corpses = crate::PlayerCorpsePool::default();
+        self.corpse_dobj_tree_retain(&[]);
     }
 
     pub(crate) fn set_phase(&mut self, phase: MatchPhase) {

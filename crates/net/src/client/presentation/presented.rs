@@ -337,7 +337,9 @@ impl PresentedSnapshot {
             return None;
         }
         let ps = self.player(id)?;
-        playerstate_iw4::viewweapon_frame_runs(ps.pm_type).then_some(ps)
+        let following = crate::PlayerDrawGate::follow_entity_num(Some(ps))
+            .is_some_and(|client| client != id.0 as i32);
+        (playerstate_iw4::viewweapon_frame_runs(ps.pm_type) || following).then_some(ps)
     }
 
     pub fn fpv_cues(&self, id: ClientId) -> FpvEventCues {

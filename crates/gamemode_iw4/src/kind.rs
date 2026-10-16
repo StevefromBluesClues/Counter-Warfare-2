@@ -1,4 +1,4 @@
-use crate::{dd, dom, ffa};
+use crate::{bomb_defusal, dd, dom, ffa};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 #[repr(u8)]
@@ -19,6 +19,11 @@ pub enum GameModeKind {
     Headquarters = 6,
 
     Sabotage = 7,
+
+    /// Competitive Bomb Defusal.
+    BombDefusal = 8,
+
+    BombDefusalCasual = 9,
 }
 
 impl GameModeKind {
@@ -35,6 +40,10 @@ impl GameModeKind {
             b"ctf" | b"capturetheflag" | b"capture_the_flag" => Some(Self::CaptureTheFlag),
             b"koth" | b"hq" | b"headquarters" => Some(Self::Headquarters),
             b"sab" | b"sabotage" => Some(Self::Sabotage),
+            b"bd" | b"bdcomp" | b"bombdefusal" | b"bomb_defusal" | b"defusal" | b"competitive" => {
+                Some(Self::BombDefusal)
+            }
+            b"bdc" | b"bdcasual" | b"bd_casual" | b"casual" => Some(Self::BombDefusalCasual),
             _ => None,
         }
     }
@@ -61,7 +70,14 @@ impl GameModeKind {
             Self::CaptureTheFlag => "ctf",
             Self::Headquarters => "koth",
             Self::Sabotage => "sab",
+            Self::BombDefusal => bomb_defusal::GAMETYPE_TOKEN,
+            Self::BombDefusalCasual => bomb_defusal::CASUAL_GAMETYPE_TOKEN,
         }
+    }
+
+    /// Either flavour of Bomb Defusal: same rules engine, different settings.
+    pub fn is_bomb_defusal(self) -> bool {
+        matches!(self, Self::BombDefusal | Self::BombDefusalCasual)
     }
 
     pub fn script_tokens(self) -> &'static [&'static str] {
@@ -74,6 +90,14 @@ impl GameModeKind {
             Self::CaptureTheFlag => &["ctf"],
             Self::Headquarters => &["koth"],
             Self::Sabotage => &["sab"],
+            Self::BombDefusal | Self::BombDefusalCasual => &[bomb_defusal::SCRIPT_GAMETYPE],
+        }
+    }
+
+    pub fn script_overlay(self) -> Option<&'static str> {
+        match self {
+            Self::BombDefusal | Self::BombDefusalCasual => Some(bomb_defusal::SCRIPT_MODULE),
+            _ => None,
         }
     }
 
@@ -91,6 +115,8 @@ impl GameModeKind {
             5 => Some(Self::CaptureTheFlag),
             6 => Some(Self::Headquarters),
             7 => Some(Self::Sabotage),
+            8 => Some(Self::BombDefusal),
+            9 => Some(Self::BombDefusalCasual),
             _ => None,
         }
     }
@@ -105,6 +131,8 @@ impl GameModeKind {
             Self::CaptureTheFlag => "CAPTURE THE FLAG",
             Self::Headquarters => "HEADQUARTERS",
             Self::Sabotage => "SABOTAGE",
+            Self::BombDefusal => bomb_defusal::DISPLAY_NAME,
+            Self::BombDefusalCasual => bomb_defusal::CASUAL_DISPLAY_NAME,
         }
     }
 
@@ -119,7 +147,9 @@ impl GameModeKind {
             | Self::SearchAndDestroy
             | Self::CaptureTheFlag
             | Self::Headquarters
-            | Self::Sabotage => None,
+            | Self::Sabotage
+            | Self::BombDefusal
+            | Self::BombDefusalCasual => None,
             Self::Domination => Some(if axis {
                 dom::START_SPAWN_AXIS
             } else {
@@ -140,7 +170,9 @@ impl GameModeKind {
             | Self::SearchAndDestroy
             | Self::CaptureTheFlag
             | Self::Headquarters
-            | Self::Sabotage => &[],
+            | Self::Sabotage
+            | Self::BombDefusal
+            | Self::BombDefusalCasual => &[],
             Self::Domination => &[dom::SPAWN_CLASSNAME],
             Self::Demolition => {
                 if axis {

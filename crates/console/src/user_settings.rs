@@ -469,6 +469,10 @@ fn parse_settings(source: &str, settings: &mut frame::GameSettings, binds: &mut 
     {
         binds.set(BindButton::Key(KeyCode::Digit4), 21);
     }
+    if binds.get(BindButton::Key(KeyCode::KeyB)).is_none() && !binds.iter().any(|(_, id)| id == 17)
+    {
+        binds.set(BindButton::Key(KeyCode::KeyB), 17);
+    }
 }
 
 pub(crate) fn native_menu_settings(

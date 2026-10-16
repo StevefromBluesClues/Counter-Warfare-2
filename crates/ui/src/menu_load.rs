@@ -134,7 +134,7 @@ pub(crate) fn begin_load_from_session(
 
     identity.zone = zone.clone();
     if let Ok(mut window) = window.single_mut() {
-        window.title = format!("iw4l — {zone}");
+        window.title = format!("Counter-Warfare 2 — {zone}");
     }
     class_overlay.0 = false;
     *app_screen = AppScreen::Loading;

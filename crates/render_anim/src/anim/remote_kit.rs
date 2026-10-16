@@ -134,17 +134,16 @@ impl PreparedRemoteKits {
         if self.kits.contains_key(&(axis, weapon, camo)) {
             return;
         }
-        let shared = if weapon == 0 || bound.world_facts().is_some_and(|facts| facts.is_shield()) {
-            None
-        } else {
-            match compositions.prepare(weapons, world_weapons, handle, camo) {
-                Ok(shared) => Some(shared),
-                Err(_) => {
-                    self.kits.insert((axis, weapon, camo), None);
-                    return;
+        // A held item without a world model (the bomb case) still draws the body.
+        let (kit_weapon, shared) =
+            if weapon == 0 || bound.world_facts().is_some_and(|facts| facts.is_shield()) {
+                (weapon, None)
+            } else {
+                match compositions.prepare(weapons, world_weapons, handle, camo) {
+                    Ok(shared) => (weapon, Some(shared)),
+                    Err(_) => (0, None),
                 }
-            }
-        };
+            };
         let Ok(soldier) = soldiers.side(axis) else {
             self.kits.insert((axis, weapon, camo), None);
             return;
@@ -158,7 +157,7 @@ impl PreparedRemoteKits {
             soldier,
             weapons,
             world_weapons,
-            weapon,
+            kit_weapon,
             camo,
             shared.as_deref(),
         );

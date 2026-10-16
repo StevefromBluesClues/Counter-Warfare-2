@@ -248,12 +248,12 @@ fn mw2_not_found(
     use asset_transport::SteamCandidate;
     let instructions = if cfg!(windows) {
         "MW2 Multiplayer was not found.\n\n\
-        Put a shortcut to the game folder next to iw4l.exe:\n\
+        Put a shortcut to the game folder next to counter-warfare2.exe:\n\
         1. In Steam, right-click Call of Duty: Modern Warfare 2 > Manage > Browse local \
         files and copy the folder path from the address bar.\n\
-        2. In the folder with iw4l.exe, right-click > New > Shortcut, paste the path and \
+        2. In the folder with counter-warfare2.exe, right-click > New > Shortcut, paste the path and \
         name the shortcut Modern Warfare 2.\n\
-        3. Launch iw4l.exe again.\n\nSearched:\n"
+        3. Launch counter-warfare2.exe again.\n\nSearched:\n"
     } else {
         "MW2 Multiplayer was not found.\n\nCreate an iw4 symlink to the game's installation directory in the configured games root, then launch again.\n\nSearched:\n"
     };
@@ -366,7 +366,7 @@ fn run_menu(
     app.add_plugins(crate::plugins::default_plugins_with_quiet_log(
         WindowPlugin {
             primary_window: Some(Window {
-                title: "iw4l".into(),
+                title: "Counter-Warfare 2".into(),
                 resolution: (1280, 720).into(),
                 ..default()
             }),
@@ -585,9 +585,9 @@ fn run_map(
             },
             primary_window: (!dedicated).then(|| Window {
                 title: match config.role {
-                    Role::Replay => format!("iw4l — play {}", config.zone),
-                    Role::Listen | Role::Dedicated => format!("iw4l — {}", config.zone),
-                    Role::Client => format!("iw4l — join {}", config.zone),
+                    Role::Replay => format!("Counter-Warfare 2 — play {}", config.zone),
+                    Role::Listen | Role::Dedicated => format!("Counter-Warfare 2 — {}", config.zone),
+                    Role::Client => format!("Counter-Warfare 2 — join {}", config.zone),
                 },
                 resolution: (ACCEPTANCE_WIDTH, ACCEPTANCE_HEIGHT).into(),
                 present_mode,

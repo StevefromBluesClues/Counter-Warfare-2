@@ -278,6 +278,10 @@ pub(super) async fn walk_prepared_match(
         "iw4l_t6/equipment",
         crate::map_scripts::T6_EQUIPMENT.to_owned(),
     );
+    scripts.insert_source(
+        "iw4l/bomb_defusal",
+        crate::map_scripts::BOMB_DEFUSAL.to_owned(),
+    );
     report.push(format!(
         "GSC source assets: {} (map overrides common_mp)",
         scripts.len()

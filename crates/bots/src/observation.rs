@@ -143,6 +143,38 @@ pub struct WeaponFacts {
     pub quick_drop_time_ms: i32,
     pub reload_time_ms: i32,
     pub reload_empty_time_ms: i32,
+    /// Fires once per trigger press (single shot or burst), so a held
+    /// trigger has to be released between shots.
+    pub semi_auto: bool,
+    /// Set for a thrown offhand: which kind, and so which button throws it.
+    pub grenade: Option<Grenade>,
+}
+
+/// Thrown offhands the bots know how to use.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Grenade {
+    Frag,
+    Smoke,
+    Stun,
+    Flash,
+}
+
+impl Grenade {
+    pub fn from_script_name(name: &str) -> Option<Self> {
+        let stem = name.strip_suffix("_mp").unwrap_or(name);
+        match stem {
+            "frag_grenade" | "semtex" => Some(Self::Frag),
+            "smoke_grenade" => Some(Self::Smoke),
+            "concussion_grenade" => Some(Self::Stun),
+            "flash_grenade" => Some(Self::Flash),
+            _ => None,
+        }
+    }
+
+    /// Lethal grenades go on the frag button, tactical ones on the smoke button.
+    pub fn lethal(self) -> bool {
+        self == Self::Frag
+    }
 }
 
 /// One owned weapon with the ammunition the match state holds for it.
@@ -230,6 +262,8 @@ pub struct ModeObjective {
     pub touching: bool,
     pub use_button: bool,
     pub radius: f32,
+    /// Several teammates may share this goal and should fan out around it.
+    pub spread: bool,
 }
 
 impl ModeObjective {
@@ -247,6 +281,7 @@ impl ModeObjective {
             touching: false,
             use_button: false,
             radius: DEFAULT_OBJECTIVE_RADIUS,
+            spread: false,
         }
     }
 }
@@ -273,9 +308,50 @@ pub struct BotObservation {
     pub events: Vec<BotEvent>,
     pub objective: Option<ModeObjective>,
     pub objectives: Vec<ModeObjective>,
+    /// Rounds with one life each reward a slower, checking pace.
+    pub methodical: bool,
+    /// Casual rules: bots aim a little shakier and react a little later.
+    pub casual: bool,
+    /// Script-frozen, as in a pre-round freeze.
+    pub frozen: bool,
+    /// Living teammates, which a team's spacing and sharing of positions needs.
+    pub teammates: Vec<(ClientId, [f32; 3])>,
+    /// This bot's place among its living team, by client number, and the
+    /// team's size: a stable way to give teammates different jobs.
+    pub squad: (u32, u32),
+    /// Enemies heard but not necessarily seen this tick: gunfire and running
+    /// feet, placed roughly where the sound came from.
+    pub heard: Vec<Contact>,
+    /// How dazed the bot is by a stun or the tail of a flash: 0 clear, 1 just
+    /// hit. Slows its turning and aim.
+    pub stun: f32,
+    /// Counts hits taken; with `damage_yaw`, the world yaw (degrees) toward
+    /// where the last hit came from.
+    pub damage_event: u32,
+    pub damage_yaw: f32,
+    /// A teammate was just killed nearby: the killer and where they are, to
+    /// be traded.
+    pub trade: Option<(ClientId, [f32; 3])>,
+    /// Enemies in sight that have visibly taken hits (hitmarkers, blood):
+    /// worth pushing to finish.
+    pub hurt: Vec<ClientId>,
+    /// Where an enemy would come through on the way here from their start:
+    /// the angle to watch when nothing is in sight.
+    pub enemy_approach: Option<[f32; 3]>,
+    /// Every bomb site marker this bot's team is shown, planted or not.
+    pub sites: Vec<[f32; 3]>,
+    /// The bomb is down and ticking.
+    pub planted: bool,
 }
 
 impl BotObservation {
+    /// A grenade of this kind still carried, if any.
+    pub fn grenade(&self, kind: Grenade) -> Option<&WeaponSlot> {
+        self.inventory
+            .iter()
+            .find(|slot| slot.facts.grenade == Some(kind) && slot.clip + slot.stock > 0)
+    }
+
     pub fn held(&self) -> Option<&WeaponSlot> {
         self.slot(self.self_state.weapon)
     }
