@@ -1,7 +1,7 @@
 # Counter-Warfare 2
 
-Counter-Warfare 2 is a fork of iw4L that brings the Counter-Strike 2 buy system to Modern
-Warfare 2 Search and Destroy gameplay.
+Counter-Warfare 2 brings the Counter-Strike 2 buy system to Modern Warfare 2 Search and
+Destroy gameplay.
 
 It uses the same economy as Counter-Strike 2, and the same or similar weapons from MW2
 are used in place of the CS2 weapons. Weapons were rebalanced to make more expensive
