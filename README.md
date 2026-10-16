@@ -5,8 +5,8 @@ Destroy gameplay.
 
 It uses the same economy as Counter-Strike 2, and the same or similar weapons from MW2
 are used in place of the CS2 weapons. Weapons were rebalanced to make more expensive
-weapons more powerful and to ensure each team's weapons are balanced. This was done by
-adding perks, attachments, and damage adjustments.
+weapons more powerful and to ensure balance between teams. This was done by adding
+perks, attachments, and damage adjustments.
 
 AI was reworked to be smarter and work better for Search and Destroy type gameplay.
 
