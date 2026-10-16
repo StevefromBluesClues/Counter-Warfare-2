@@ -11,8 +11,8 @@ MW2 you already own and it loads that installation's maps, models, textures and 
 into its own engine. No game assets are included.
 
 <p align="center">
-  <img src="docs/screenshots/bomb-plant.jpg" width="49%" alt="Bomb planting">
-  <img src="docs/screenshots/tanker-explosion.jpg" width="49%" alt="Tanker explosion">
+  <img src="docs/screenshots/team-select.jpg" width="49%" alt="Choose team screen: Task Force 141 counter-terrorists or OpFor terrorists">
+  <img src="docs/screenshots/buy-menu.jpg" width="49%" alt="Buy menu with pistols, SMGs, rifles, heavy, grenades and equipment">
 </p>
 
 ## The two modes
