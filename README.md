@@ -1,9 +1,14 @@
 # Counter-Warfare 2
 
-Counter-Warfare 2 brings a Counter-Strike style **Bomb Defusal** mode to Call of Duty:
-Modern Warfare 2 (2009) multiplayer maps: a CS2 money economy, a buy menu with
-CS-equivalent MW2 guns, CT vs T sides, halftime side switches and bots that buy, take
-cover, peek, trade and play the bomb like a team.
+Counter-Warfare 2 is a fork of iw4L that brings the Counter-Strike 2 buy system to Modern
+Warfare 2 Search and Destroy gameplay.
+
+It uses the same economy as Counter-Strike 2, and the same or similar weapons from MW2
+are used in place of the CS2 weapons. Weapons were rebalanced to make more expensive
+weapons more powerful and to ensure each team's weapons are balanced. This was done by
+adding perks, attachments, and damage adjustments.
+
+AI was reworked to be smarter and work better for Search and Destroy type gameplay.
 
 It is a fork of [IW4L](https://github.com/vladtrc/iw4L) by vladtrc, an open-source
 runtime for MW2 written in Rust with [Bevy](https://bevy.org/). Point it at a copy of
