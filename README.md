@@ -71,15 +71,6 @@ IW4L_GAMETYPE=bd make map mp_invasion
 `IW4L_GAMETYPE=bdc` starts Casual. `cargo build --profile play -p launcher` builds the
 game alone, into `target/play/iw4l.exe`.
 
-## Known issues
-
-* mp_invasion favors the attackers: in bot-only tests T wins most rounds there, while
-  mp_afghan and mp_derail are close to even.
-* Gameplay outside Bomb Defusal is IW4L's and remains incomplete; expect missing
-  behavior, bugs and desyncs.
-
-More in [docs/BOMB-DEFUSAL.md](docs/BOMB-DEFUSAL.md#known-issues).
-
 ## Inside the engine
 
 | Area | Implementation |
